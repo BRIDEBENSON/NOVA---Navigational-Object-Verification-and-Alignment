@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # Path to your folder containing the images
-folder_path = "C:\Users\aquil\Desktop\NOVA\NOVA---Navigational-Object-Verification-and-Alignment\data_prep\raw_data\anusha_raw"
+folder_path = "C:/Users/aquil/Desktop/NOVA/NOVA---Navigational-Object-Verification-and-Alignment/image_preprocessing/raw_data/mathew_raw"
 
 # Supported image formats (you can add more if needed)
 image_formats = (".jpg", ".jpeg", ".png", ".bmp", ".tiff")
