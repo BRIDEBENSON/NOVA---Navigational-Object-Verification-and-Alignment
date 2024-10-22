@@ -1,8 +1,17 @@
+import sys
 import os
-from PIL import Image
+print("Python executable:", sys.executable)
+print("Python version:", sys.version)
+
+try:
+    from PIL import Image
+    print("Pillow is installed correctly.")
+except ImportError:
+    print("Pillow is not found.")
+
 
 # Define folder path where grayscale images are stored
-folder_path = r"C:/Users/aquil/Desktop/NOVA/NOVA---Navigational-Object-Verification-and-Alignment/image_preprocessing/raw_data/anusha_raw"
+folder_path = r"C:\Users\student\Desktop\NOVA\NOVA---Navigational-Object-Verification-and-Alignment\image_preprocessing\raw_data\mathew_raw"
 
 # Target size (640x640)
 target_size = (640, 640)
@@ -15,7 +24,7 @@ def resize_image(image_path):
             img = img.convert("L")
         
         # Maintain aspect ratio and resize
-        img.thumbnail(target_size, Image.ANTIALIAS)
+        img.thumbnail(target_size, Image.LANCZOS)
 
         # Create a new grayscale image with black background (for padding)
         new_img = Image.new("L", target_size, 0)  # 0 is black in grayscale
