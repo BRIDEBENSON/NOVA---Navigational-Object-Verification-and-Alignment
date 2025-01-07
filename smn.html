@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Object Visibility Checker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="visibility.html">Star Visibility Checker</a></li>
+                <li><a href="facts.html">Constellation Facts</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h1 class="welcome">Celestial Object Visibility Checker</h1>
+        <section id="visibility-form">
+            <h2>Check Celestial Object Visibility</h2>
+            <form id="visibilityForm">
+                <label>Right Ascension (HH:MM:SS): 
+                    <input type="text" id="ra" placeholder="HH:MM:SS" required>
+                </label>
+                <br>
+                <label>Declination (DD:MM:SS): 
+                    <input type="text" id="dec" placeholder="DD:MM:SS" required>
+                </label>
+                <br>
+                <label>Latitude (degrees): <input type="number" id="latitude" required></label>
+                <br>
+                <label>Longitude (degrees): <input type="number" id="longitude" required></label>
+                <br>
+                <button type="button" id="checkButton">Check Visibility</button>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Nova</p>
+        <p>Enquire at <a href="mailto:info@nova.com">info@nova.com</a> | Contact: +123 456 7890</p>
+    </footer>
+    
+    <script>
+        document.getElementById("checkButton").addEventListener("click", checkVisibility);
+
+        function parseTimeString(timeString) {
+            const [h, m, s] = timeString.split(':').map(parseFloat);
+            return { h: h || 0, m: m || 0, s: s || 0 };
+        }
+
+        function parseDegreeString(degreeString) {
+            const [d, m, s] = degreeString.split(':').map(parseFloat);
+            return { d: d || 0, m: m || 0, s: s || 0 };
+        }
+
+        function hmsToHours(h, m, s) {
+            return h + m / 60 + s / 3600;
+        }
+
+        function dmsToDegrees(d, m, s) {
+            return d + m / 60 + s / 3600;
+        }
+
+        function calculateLST(longitude, dateTime) {
+            const jd2000 = 2451545.0;
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const jd = jd2000 + (dateTime.getTime() - Date.UTC(2000, 0, 1, 12)) / msPerDay;
+            const d = jd - 2451545.0;
+            const gst = (280.46061837 + 360.98564736629 * d) % 360;
+            const lst = (gst + longitude + 360) % 360;
+            return lst;
+        }
+
+        function hourAngle(lst, raDeg) {
+            let ha = lst - raDeg;
+            return ha < 0 ? ha + 360 : ha;
+        }
+
+        function altitude(decDeg, latDeg, hAngleDeg) {
+            const decRad = decDeg * Math.PI / 180;
+            const latRad = latDeg * Math.PI / 180;
+            const hRad = hAngleDeg * Math.PI / 180;
+            const sinAlt = Math.sin(decRad) * Math.sin(latRad) + Math.cos(decRad) * Math.cos(latRad) * Math.cos(hRad);
+            return Math.asin(sinAlt) * 180 / Math.PI;
+        }
+
+        function isVisible(ra, dec, latitude, longitude, dateTime) {
+            const { h: raH, m: raM, s: raS } = parseTimeString(ra);
+            const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
+            const raDeg = hmsToHours(raH, raM, raS) * 15;
+            const decDeg = dmsToDegrees(decD, decM, decS);
+            const lst = calculateLST(longitude, dateTime);
+            const hAngle = hourAngle(lst, raDeg);
+            const alt = altitude(decDeg, latitude, hAngle);
+            console.log(`RA: ${raDeg}, Dec: ${decDeg}, LST: ${lst}, Hour Angle: ${hAngle}, Altitude: ${alt}`);
+            return { visible: alt > 0, altitude: alt };
+        }
+
+        function checkVisibility() {
+            const ra = document.getElementById('ra').value;
+            const dec = document.getElementById('dec').value;
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            const dateTime = new Date();
+
+            if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
+                alert("Please enter all fields correctly.");
+                return;
+            }
+
+            const result = isVisible(ra, dec, latitude, longitude, dateTime);
+            const message = result.visible 
+                ? `The celestial object is visible at an altitude of ${result.altitude.toFixed(2)} degrees.` 
+                : `The celestial object is not visible. Altitude: ${result.altitude.toFixed(2)} degrees.`;
+            alert(message);
+        }
+    </script>
+</body>
+</html>
