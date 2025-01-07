@@ -40,13 +40,15 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+    import dotenv from "dotenv";
+    dotenv.config()
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
-      apiKey: "AIzaSyA5S0VzS6_xHCiykvN8kcPkS3b3R7u88FA",
+      apiKey = process.env.FIREBASE_API_KEY,
       authDomain: "nova-baam.firebaseapp.com",
       projectId: "nova-baam",
       storageBucket: "nova-baam.firebasestorage.app",
@@ -60,4 +62,3 @@
     const analytics = getAnalytics(app);
   </script>
 </html>
-
