@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "nova-baam"
-  }
+    "default": "nova-bigbaam",
+    "bigbaam": "nova-bigbaam"
+  },
+  "targets": {},
+  "etags": {}
 }
