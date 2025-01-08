@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Visibility Checker</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #000000, #090333, #1a0554);
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: rgba(0, 0, 15, 0.9);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(88, 111, 253, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background: rgba(88, 111, 253, 0.2);
+            box-shadow: 0 0 15px rgba(88, 111, 253, 0.5);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(13, 13, 48, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(88, 111, 253, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #818cf8;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid rgba(88, 111, 253, 0.2);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4f46e5, #818cf8);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(88, 111, 253, 0.5);
+        }
+        select {
+        background-color: black;
+        color: white;
+        padding: 0.5rem;
+        border: 1px solid rgba(88, 111, 253, 0.2);
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 1rem;
+        }
+
+        select option {
+        background-color: white;
+        color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="images\logo.png" alt="Nova Logo" class="logo">
+                <span class="logo-text">NOVA</span>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="visibility.html">Star Visibility Checker</a></li>
+                <li><a href="facts.html">Constellation Facts</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h6 class="welcome">Celestial Object Visibility Checker</h6>
+        <section id="visibility-form">
+            <h2>Check Celestial Object Visibility</h2>
+            <form id="visibilityForm">
+                <label for="celestialObject">Select Celestial Object:</label>
+                <select id="celestialObject" onchange="updateRAandDec()">
+                    <option value="Sirius" data-ra="06:45:09" data-dec="-16:42:58">Sirius</option>
+                    <option value="Aldebaran" data-ra="04:35:55" data-dec="+16:30:33">Aldebaran</option>
+                    <option value="Pollux" data-ra="07:45:19" data-dec="+28:01:34">Pollux</option>
+                </select>
+                <label>Right Ascension (RA): 
+                    <input type="text" id="ra" placeholder="HH:MM:SS" required>
+                </label>
+                <label>Declination (Dec): 
+                    <input type="text" id="dec" placeholder="DD:MM:SS" required>
+                </label>
+                <label for="location">Select Location:</label>
+                <select id="location" onchange="updateLatAndLong()">
+                    <option value="India" data-lat="9.9312" data-long="76.2673">India(Kochi)</option>
+                    <option value="Oman" data-lat="21.4735" data-long="55.9754">Oman</option>
+                    <option value="UK" data-lat="55.3781" data-long="3.4360">UK</option>
+                </select>
+                <label>Latitude (degrees): <input type="number" id="latitude" required></label>
+                <label>Longitude (degrees): <input type="number" id="longitude" required></label>
+                <button type="button" id="checkButton">Check Visibility</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Nova</p>
+        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
+    </footer>
+    <script>
+        document.getElementById("checkButton").addEventListener("click", checkVisibility);
+
+        function updateRAandDec() {
+            const selectedOption = document.getElementById('celestialObject').selectedOptions[0];
+            document.getElementById('ra').value = selectedOption.getAttribute('data-ra');
+            document.getElementById('dec').value = selectedOption.getAttribute('data-dec');
+        }
+
+        function updateLatAndLong() {
+            const selectedOption = document.getElementById('location').selectedOptions[0];
+            document.getElementById('latitude').value = selectedOption.getAttribute('data-lat');
+            document.getElementById('longitude').value = selectedOption.getAttribute('data-long');
+        }
+
+        function parseTimeString(timeString) {
+            const [h, m, s] = timeString.split(':').map(parseFloat);
+            return { h: h || 0, m: m || 0, s: s || 0 };
+        }
+
+        function parseDegreeString(degreeString) {
+            const [d, m, s] = degreeString.split(':').map(parseFloat);
+            return { d: d || 0, m: m || 0, s: s || 0 };
+        }
+
+        function hmsToHours(h, m, s) {
+            return h + m / 60 + s / 3600;
+        }
+
+        function dmsToDegrees(d, m, s) {
+            return d + m / 60 + s / 3600;
+        }
+
+        function calculateLST(longitude, dateTime) {
+            const jd2000 = 2451545.0;
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const jd = jd2000 + (dateTime.getTime() - Date.UTC(2000, 0, 1, 12)) / msPerDay;
+            const d = jd - 2451545.0;
+            const gst = (280.46061837 + 360.98564736629 * d) % 360;
+            const lst = (gst + longitude + 360) % 360;
+            return lst;
+        }
+
+        function hourAngle(lst, raDeg) {
+            let ha = lst - raDeg;
+            return ha < 0 ? ha + 360 : ha;
+        }
+
+        function altitude(decDeg, latDeg, hAngleDeg) {
+            const decRad = decDeg * Math.PI / 180;
+            const latRad = latDeg * Math.PI / 180;
+            const hRad = hAngleDeg * Math.PI / 180;
+            const sinAlt = Math.sin(decRad) * Math.sin(latRad) + Math.cos(decRad) * Math.cos(latRad) * Math.cos(hRad);
+            return Math.asin(sinAlt) * 180 / Math.PI;
+        }
+
+        function isVisible(ra, dec, latitude, longitude, dateTime) {
+            const { h: raH, m: raM, s: raS } = parseTimeString(ra);
+            const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
+            const raDeg = hmsToHours(raH, raM, raS) * 15;
+            const decDeg = dmsToDegrees(decD, decM, decS);
+            const lst = calculateLST(longitude, dateTime);
+            const hAngle = hourAngle(lst, raDeg);
+            const alt = altitude(decDeg, latitude, hAngle);
+            console.log(`RA: ${raDeg}, Dec: ${decDeg}, LST: ${lst}, Hour Angle: ${hAngle}, Altitude: ${alt}`);
+            return { visible: alt > 0, altitude: alt };
+        }
+
+        function checkVisibility() {
+            const ra = document.getElementById('ra').value;
+            const dec = document.getElementById('dec').value;
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            const dateTime = new Date();
+
+            if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
+                alert("Please enter all fields correctly.");
+                return;
+            }
+
+            const result = isVisible(ra, dec, latitude, longitude, dateTime);
+            const message = result.visible 
+                ? `The celestial object is visible at an altitude of ${result.altitude.toFixed(2)} degrees.` 
+                : `The celestial object is not visible. Altitude: ${result.altitude.toFixed(2)} degrees.`;
+            alert(message);
+        }
+
+        // Initialize with the first object's RA and Dec
+        updateRAandDec();
+    </script>
+</body>
+</html>
+
+
