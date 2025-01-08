@@ -171,35 +171,73 @@
             const [h, m, s] = timeString.split(':').map(parseFloat);
             return { h: h || 0, m: m || 0, s: s || 0 };
         }
-
+    
         function parseDegreeString(degreeString) {
             const [d, m, s] = degreeString.split(':').map(parseFloat);
             return { d: d || 0, m: m || 0, s: s || 0 };
         }
-
+    
         function hmsToHours(h, m, s) {
             return h + m / 60 + s / 3600;
         }
-
+    
         function dmsToDegrees(d, m, s) {
             return d + m / 60 + s / 3600;
         }
-
-        function calculateLST(longitude, dateTime) {
+    
+        function calculateJD(date) {
+            return (date.getTime() / 86400000) + 2440587.5;
+        }
+    
+        function calculateGST(jd) {
             const jd2000 = 2451545.0;
-            const msPerDay = 1000 * 60 * 60 * 24;
-            const jd = jd2000 + (dateTime.getTime() - Date.UTC(2000, 0, 1, 12)) / msPerDay;
-            const d = jd - 2451545.0;
-            const gst = (280.46061837 + 360.98564736629 * d) % 360;
-            const lst = (gst + longitude + 360) % 360;
+            const t = (jd - jd2000) / 36525;
+            let gst = 280.46061837 + 360.98564736629 * (jd - jd2000) + 0.000387933 * t * t - t * t * t / 38710000;
+            return (gst % 360 + 360) % 360;
+        }
+    
+        function calculateLST(longitude, dateTime) {
+            const jd = calculateJD(dateTime);
+            const gst = calculateGST(jd);
+            const lst = (gst + longitude) % 360;
             return lst;
         }
-
-        function hourAngle(lst, raDeg) {
-            let ha = lst - raDeg;
-            return ha < 0 ? ha + 360 : ha;
+    
+        function calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime) {
+            const latRad = latitude * Math.PI / 180;
+            const decRad = decDeg * Math.PI / 180;
+            const cosHA = (Math.sin(-0.5667 * Math.PI / 180) - Math.sin(latRad) * Math.sin(decRad)) / (Math.cos(latRad) * Math.cos(decRad));
+    
+            if (cosHA > 1) return { riseTime: null, setTime: null, alwaysVisible: false, neverVisible: true };
+            if (cosHA < -1) return { riseTime: null, setTime: null, alwaysVisible: true, neverVisible: false };
+    
+            const haRiseSet = Math.acos(cosHA) * 180 / Math.PI;
+            const haRiseSetHours = haRiseSet / 15;
+            const lstNow = calculateLST(longitude, dateTime) / 15;
+            const raHours = raDeg / 15;
+    
+            const riseLST = (raHours - haRiseSetHours + 24) % 24;
+            const setLST = (raHours + haRiseSetHours) % 24;
+    
+            const riseTime = new Date(dateTime);
+            const setTime = new Date(dateTime);
+    
+            const siderealToSolarFactor = 0.99726957;
+            const riseOffset = ((riseLST - lstNow + 24) % 24) * siderealToSolarFactor;
+            const setOffset = ((setLST - lstNow + 24) % 24) * siderealToSolarFactor;
+    
+            riseTime.setUTCHours(riseTime.getUTCHours() + Math.floor(riseOffset));
+            riseTime.setUTCMinutes(riseTime.getUTCMinutes() + Math.round((riseOffset % 1) * 60));
+    
+            setTime.setUTCHours(setTime.getUTCHours() + Math.floor(setOffset));
+            setTime.setUTCMinutes(setTime.getUTCMinutes() + Math.round((setOffset % 1) * 60));
+    
+            if (riseTime < dateTime) riseTime.setDate(riseTime.getDate() + 1);
+            if (setTime < dateTime) setTime.setDate(setTime.getDate() + 1);
+    
+            return { riseTime, setTime, alwaysVisible: false, neverVisible: false };
         }
-
+    
         function altitude(decDeg, latDeg, hAngleDeg) {
             const decRad = decDeg * Math.PI / 180;
             const latRad = latDeg * Math.PI / 180;
@@ -207,41 +245,39 @@
             const sinAlt = Math.sin(decRad) * Math.sin(latRad) + Math.cos(decRad) * Math.cos(latRad) * Math.cos(hRad);
             return Math.asin(sinAlt) * 180 / Math.PI;
         }
-
-        function isVisible(ra, dec, latitude, longitude, dateTime) {
-            const { h: raH, m: raM, s: raS } = parseTimeString(ra);
-            const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
-            const raDeg = hmsToHours(raH, raM, raS) * 15;
-            const decDeg = dmsToDegrees(decD, decM, decS);
-            const lst = calculateLST(longitude, dateTime);
-            const hAngle = hourAngle(lst, raDeg);
-            const alt = altitude(decDeg, latitude, hAngle);
-            console.log(`RA: ${raDeg}, Dec: ${decDeg}, LST: ${lst}, Hour Angle: ${hAngle}, Altitude: ${alt}`);
-            return { visible: alt > 0, altitude: alt };
-        }
-
+    
         function checkVisibility() {
             const ra = document.getElementById('ra').value;
             const dec = document.getElementById('dec').value;
             const latitude = parseFloat(document.getElementById('latitude').value);
             const longitude = parseFloat(document.getElementById('longitude').value);
             const dateTime = new Date();
-
+    
             if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
                 alert("Please enter all fields correctly.");
                 return;
             }
-
-            const result = isVisible(ra, dec, latitude, longitude, dateTime);
-            const message = result.visible 
-                ? `The celestial object is visible at an altitude of ${result.altitude.toFixed(2)} degrees.` 
-                : `The celestial object is not visible. Altitude: ${result.altitude.toFixed(2)} degrees.`;
+    
+            const { h: raH, m: raM, s: raS } = parseTimeString(ra);
+            const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
+            const raDeg = hmsToHours(raH, raM, raS) * 15;
+            const decDeg = dmsToDegrees(decD, decM, decS);
+    
+            const lst = calculateLST(longitude, dateTime);
+            const hAngle = ((lst - raDeg + 360) % 360);
+            const altNow = altitude(decDeg, latitude, hAngle);
+    
+            const visibility = calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime);
+    
+            let message;
+            if (altNow > 0) {
+                message = `The object is currently visible at an altitude of ${altNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
+            } else {
+                message = `The object is currently not visible.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.\nCurrent altitude: ${altNow.toFixed(2)} degrees.`;
+            }
             alert(message);
         }
-
-        // Initialize with the first object's RA and Dec
-        updateRAandDec();
-    </script>
+    </script>      
 </body>
 </html>
 
