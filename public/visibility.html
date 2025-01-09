@@ -247,8 +247,42 @@
             const sinAlt = Math.sin(decRad) * Math.sin(latRad) + Math.cos(decRad) * Math.cos(latRad) * Math.cos(hRad);
             return Math.asin(sinAlt) * 180 / Math.PI;
         }
-    
-        function checkVisibility() {
+function azimuth(decDeg, latDeg, hAngleDeg) {
+    const decRad = decDeg * Math.PI / 180;
+    const latRad = latDeg * Math.PI / 180;
+    const hRad = hAngleDeg * Math.PI / 180;
+
+    const sinDec = Math.sin(decRad);
+    const cosDec = Math.cos(decRad);
+    const sinLat = Math.sin(latRad);
+    const cosLat = Math.cos(latRad);
+    const sinH = Math.sin(hRad);
+    const cosH = Math.cos(hRad);
+
+    const sinAltitude = sinLat * sinDec + cosLat * cosDec * cosH;
+    const altitude = Math.asin(sinAltitude);
+
+    // More robust azimuth calculation
+    let azimuth;
+    if (Math.abs(Math.cos(altitude)) < 1e-10) { // Check for near-zero cos(altitude)
+        // Special case: Altitude near 90 or -90 degrees
+        if (altitude > 0) {
+            azimuth = 0; // Zenith
+        } else {
+            azimuth = 180; // Nadir
+        }
+    } else {
+        const sinAz = -sinH * cosDec / Math.cos(altitude);
+        const cosAz = (cosLat * sinDec - sinLat * cosDec * cosH) / Math.cos(altitude);
+        azimuth = Math.atan2(sinAz, cosAz) * 180 / Math.PI;
+    }
+
+    if (azimuth < 0) {
+        azimuth += 360;
+    }
+    return azimuth;
+}
+       function checkVisibility() {
             const ra = document.getElementById('ra').value;
             const dec = document.getElementById('dec').value;
             const latitude = parseFloat(document.getElementById('latitude').value);
@@ -268,16 +302,18 @@
             const lst = calculateLST(longitude, dateTime);
             const hAngle = ((lst - raDeg + 360) % 360);
             const altNow = altitude(decDeg, latitude, hAngle);
+            const azNow = azimuth(decDeg, latitude, hAngle);
     
             const visibility = calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime);
     
             let message;
-            if (altNow > 0) {
-                message = `The object is currently visible at an altitude of ${altNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
-            } else {
-                message = `The object is currently not visible.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.\nCurrent altitude: ${altNow.toFixed(2)} degrees.`;
-            }
-            alert(message);
+            
+if (altNow > 0) {
+    message = `The object is currently visible.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
+} else {
+    message = `The object is currently not visible.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
+}
+alert(message);
         }
     </script>      
 </body>
