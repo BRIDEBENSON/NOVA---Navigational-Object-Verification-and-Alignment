@@ -155,6 +155,67 @@
         <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
     </footer>
     <script>
+        function getUserLocation() {
+    const locationSelect = document.getElementById('location'); // Get the location select element
+    const latInput = document.getElementById('latitude');
+    const longInput = document.getElementById('longitude');
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                latInput.value = position.coords.latitude.toFixed(6);
+                longInput.value = position.coords.longitude.toFixed(6);
+                if (locationSelect.querySelector('option[value="custom"]')) {
+                    locationSelect.value = "custom"; // Select "Custom" if it exists
+                }
+            },
+            (error) => {
+                console.error('Error fetching location:', error.message);
+                handleLocationError(error); // Call the error handler
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser. Please enter your location manually.");
+    }
+}
+
+function handleLocationError(error) {
+    let errorMessage = "An error occurred while getting your location. "; // Start with a general message
+
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            errorMessage += "You denied the request for Geolocation.";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            errorMessage += "Location information is unavailable.";
+            break;
+        case error.TIMEOUT:
+            errorMessage += "The request to get user location timed out.";
+            break;
+        case error.UNKNOWN_ERROR:
+            errorMessage += "An unknown error occurred.";
+            break;
+    }
+
+    errorMessage += " Please enter your location manually."; // Add the manual entry prompt
+
+    alert(errorMessage); // Display the single, complete message
+}
+// Event listener for location select changes (for predefined locations)
+document.getElementById('location').addEventListener('change', function() {
+    const selectedOption = this.selectedOptions[0];
+    if (selectedOption && selectedOption.value !== "custom") {
+        document.getElementById('latitude').value = selectedOption.getAttribute('data-lat') || "";
+        document.getElementById('longitude').value = selectedOption.getAttribute('data-long') || "";
+    } else if (selectedOption && selectedOption.value === "custom") {
+        document.getElementById('latitude').value = "";
+        document.getElementById('longitude').value = "";
+    }
+});
+
+// Call getUserLocation on page load
+window.addEventListener('load', getUserLocation);
+
         document.getElementById("checkButton").addEventListener("click", checkVisibility);
 
         function updateRAandDec() {
