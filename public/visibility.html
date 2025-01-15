@@ -370,9 +370,9 @@ function azimuth(decDeg, latDeg, hAngleDeg) {
             let message;
             
 if (altNow > 0) {
-    message = `The object is currently visible.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
+    message = `The celestial object is currently visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
 } else {
-    message = `The object is currently not visible.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
+    message = `The celestial object is currently not visible  in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
 }
 alert(message);
         }
