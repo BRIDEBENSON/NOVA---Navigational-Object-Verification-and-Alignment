@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orion Constellation Facts</title>
+    <title>Almanac</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -118,13 +118,90 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .page-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2rem;
+        }
+
+        .month-box {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .month-label {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #007BFF;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+.fact-container {
+    margin-top: 30px;
+}
+
+.fact-box {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.fact-box img {
+    width: 150px;
+    height: auto;
+    margin-left: 20px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.text {
+    flex: 1;
+}
+
+.text h2 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.text p, .text ul {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+.text ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
     </style>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo-container">
-                <img src="images\logo.png" alt="Nova Logo" class="logo">
+                <img src="logo-removebg.png" alt="Nova Logo" class="logo">
                 <span class="logo-text">NOVA</span>
             </div>
             <ul>
@@ -137,53 +214,420 @@
     <br>
     <br>
     <br>
-    <h6 class="welcome">Facts about Orion</h6>
-    <div class="fact-container">
-        <div class="fact-box">
-            <div class="text">
-                <h2>1. Mythological Significance</h2>
-                <p>Orion, named after a hunter in Greek mythology, is one of the most recognizable constellations in the night sky. It has been depicted in the myths of many ancient civilizations, including the Greeks, Egyptians, and Native Americans.</p>
+    <h6 class="welcome">Almanac</h6>
+    <div class="month-box">
+        <h2 class="month-label">January</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Crab Nebula (M1)</h2>
+                    <p>A supernova remnant with intricate filaments, located in the constellation Taurus.</p>
+                    <p>Observable at: RA: 05h 34m 31.97s, Dec: +22° 00′ 52.1″</p>
+                </div>
+                <img src="Crab_Nebula.jpg" alt="Mythological Significance">
             </div>
-            <img src="images\facts1.jpeg" alt="Mythological Significance">
-        </div>
 
-        <div class="fact-box">
-            <div class="text">
-                <h2>2. Prominent Stars</h2>
-                <ul>
-                    <li><strong>Betelgeuse:</strong> A red supergiant star, marking Orion's shoulder, known for its immense size and brightness.</li>
-                    <li><strong>Rigel:</strong> A blue supergiant, the brightest star in Orion, located at the hunter’s foot.</li>
-                    <li><strong>Bellatrix:</strong> The "Amazon Star," another bright star in Orion, positioned at the hunter’s shoulder.</li>
-                </ul>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Beehive Cluster (M44)</h2>
+                    <ul>
+                        <li><strong>Description:</strong>A bright open cluster resembling a swarm of bees, located in Cancer.</li>
+                        <li><strong>RA:</strong>08h 40m 24.00s</li>
+                        <li><strong>Dec:</strongs>+19° 41′ 00.0″</li>
+                    </ul>
+                </div>
+                <img src="Beehive-Cluster.webp" alt="Prominent Stars">
             </div>
-            <img src="images\facts2.jpg" alt="Prominent Stars">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Andromeda Galaxy (M31)</h2>
+                    <ul>
+                        <li><strong>Description:</strong>The closest large spiral galaxy, visible to the naked eye, in the constellation Andromeda.</li>
+                        <li><strong>RA:</strong>00h 42m 44.30s</li>
+                        <li><strong>Dec:</strongs>+41° 16′ 09.0″</li>
+                    </ul>
+                </div>
+                <img src="Andromeda_Galaxy.jpg" alt="Prominent Stars">
+            </div>
         </div>
+    </div>
 
-        <div class="fact-box">
-            <div class="text">
-                <h2>3. Orion’s Belt</h2>
-                <p>Orion’s Belt is a distinct line of three bright stars—Alnitak, Alnilam, and Mintaka. This feature makes the constellation easy to locate in the night sky.</p>
+    <!-- Another Month Box -->
+    <div class="month-box">
+        <h2 class="month-label">February</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Pleiades (M45)</h2>
+                    <p>Description: A bright open cluster with bluish nebulosity, located in the constellation Taurus.</p>
+                    <p>RA: 03h 47m 24.00s</p>
+                    <p>Dec: +24° 07′ 00.0″</p>
+                </div>
+                <img src="plieides.jpeg" alt="Orion's Belt">
             </div>
-            <img src="images\facts3.jpg" alt="Orion's Belt">
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Eskimo Nebula (NGC 2392)</h2>
+                    <p>Description: A planetary nebula resembling a face in a parka, located in Gemini.</p>
+                    <p>RA: 07h 29m 10.77s</p>
+                    <p> Dec: +20° 54′ 42.6″</p>
+                </div>
+                <img src="eskimo_nebula.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Horsehead Nebula (Barnard 33)</h2>
+                    <p>Description: A dark nebula shaped like a horse's head, silhouetted against a bright nebula in Orion.</p>
+                    <p>RA: 05h 40m 59.00s</p>
+                    <p>Dec: −02° 27′ 30.0″</p>
+                </div>
+                <img src="horsehead-nebula.jpg" alt="Nebulae in Orion">
+            </div>
         </div>
+    </div>
 
-        <div class="fact-box">
-            <div class="text">
-                <h2>4. Nebulae in Orion</h2>
-                <ul>
-                    <li><strong>Orion Nebula (M42):</strong> A stellar nursery where new stars are born, visible with the naked eye under clear skies.</li>
-                    <li><strong>Horsehead Nebula:</strong> A dark nebula in the shape of a horse’s head, often photographed by astronomers.</li>
-                </ul>
+    <div class="month-box">
+        <h2 class="month-label">March</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Leo Triplet (M65, M66, NGC 3628)</h2>
+                    <p>Description:  A group of three interacting galaxies in the constellation Leo.</p>
+                    <p>RA (M65): 11h 18m 55.96s, Dec: +13° 05′ 32.3″</p>
+                    <p>Dec (M66): 11h 20m 14.96s, Dec: +12° 59′ 29.5″</p>
+                    <p>RA (NGC 3628): 11h 20m 16.47s, Dec: +13° 35′ 12.7″</p>
+                </div>
+                <img src="Leo_triplet.webp" alt="Nebulae in Orion">
             </div>
-            <img src="images\facts4.jpg" alt="Nebulae in Orion">
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Hydra Galaxy Cluster (Abell 1060)</h2>
+                    <p>Description: A dense galaxy cluster in the constellation Hydra, containing over 100 galaxies.</p>
+                    <p>RA: 10h 36m 42.00s</p>
+                    <p> Dec: −27° 31′ 00.0″</p>
+                </div>
+                <img src="Hydra_Galaxy_Cluster.jpeg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Rosette Nebula (NGC 2237-39)</h2>
+                    <p>Description: A large, circular emission nebula resembling a blooming rose, located in Monoceros.</p>
+                    <p>RA: 06h 31m 55.00s</p>
+                    <p>Dec: +04° 57′ 00.0″</p>
+                </div>
+                <img src="Rosette-Nebula.webp" alt="Nebulae in Orion">
+            </div>
         </div>
+    </div>
 
-        <div class="fact-box">
-            <div class="text">
-                <h2>5. Visibility</h2>
-                <p>Orion is visible from almost every part of the world. In the Northern Hemisphere, it can be seen during winter evenings, while in the Southern Hemisphere, it appears during summer.</p>
+    <div class="month-box">
+        <h2 class="month-label">April</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Hercules Globular Cluster (M13)</h2>
+                    <p>Description:  A dense globular cluster with hundreds of thousands of stars, in Hercules.</p>
+                    <p>RA :16h 41m 41.24s</p>
+                    <p>Dec :+36° 27′ 40.7″</p>
+                </div>
+                <img src="hercules_cluster.jpg" alt="Nebulae in Orion">
             </div>
-            <img src="images\facts5.jpg" alt="Visibility">
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Sombrero Galaxy (M104)</h2>
+                    <p>Description:  A spiral galaxy with a striking dust lane, located in Virgo.</p>
+                    <p>RA:  12h 39m 59.43s</p>
+                    <p> Dec: −11° 37′ 23.0</p>
+                </div>
+                <img src="Sombrero_Galaxy.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Flame Nebula (NGC 2024)</h2>
+                    <p>Description: A glowing emission nebula near Alnitak in Orion’s Belt, located in Orion.</p>
+                    <p>RA: 05h 41m 42.00s</p>
+                    <p>Dec: −01° 51′ 00.0″</p>
+                </div>
+                <img src="flame_nebula.jpg" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">May</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Ring Nebula (M57)</h2>
+                    <p>Description:  A small, colorful planetary nebula resembling a ring, located in Lyra.</p>
+                    <p>RA :18h 53m 35.08s</p>
+                    <p>Dec :+33° 01′ 45.0″</p>
+                </div>
+                <img src="ring_nebula.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>M92</h2>
+                    <p>Description: A bright globular cluster often overshadowed by M13, located in Hercules.</p>
+                    <p>RA: 17h 17m 07.39s</p>
+                    <p> Dec: +43° 08′ 09.4″</p>
+                </div>
+                <img src="Messier-92.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Black Eye Galaxy (M64)</h2>
+                    <p>Description:  A spiral galaxy with a prominent dark dust feature, located in Coma Berenices</p>
+                    <p>RA: 12h 56m 43.73s</p>
+                    <p>Dec: +21° 40′ 58.3″</p>
+                </div>
+                <img src="Black-Eye-Galaxy.webp" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">June</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Lagoon Nebula (M8)</h2>
+                    <p>Description: A bright emission nebula with dark lanes, located in Sagittarius.</p>
+                    <p>RA : 18h 03m 37.00s
+                    </p>
+                    <p>Dec : −24° 23′ 12.0″</p>
+                </div>
+                <img src="lagoon-nebula.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Omega Nebula (M17)</h2>
+                    <p>Description: A swan-shaped emission nebula, also known as the Swan Nebula, in Sagittarius.</p>
+                    <p>RA: 18h 20m 26.00s
+                    </p>
+                    <p> Dec: −16° 10′ 36.0″</p>
+                </div>
+                <img src="omega-nebula.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Sagittarius Star Cloud (M24)</h2>
+                    <p>Description:  A dense star field within the Milky Way, located in Sagittarius</p>
+                    <p>RA: 18h 17m 00.00s
+                    </p>
+                    <p>Dec: −18° 29′ 00.0″</p>
+                </div>
+                <img src="Sagittarius_star_cloud.png" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">July</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Trifid Nebula (M20)</h2>
+                    <p>Description:  A nebula combining emission, reflection, and dark regions, located in Sagittarius.</p>
+                    <p>RA :18h 02m 23.00s</p>
+                    <p>Dec :−22° 58′ 18.0″</p>
+                </div>
+                <img src="Trifid-Nebula.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Eagle Nebula (M16)</h2>
+                    <p>Description: Famous for the "Pillars of Creation," this emission nebula is located in Serpens.</p>
+                    <p>RA: 18h 18m 48.00s</p>
+                    <p> Dec: −13° 49′ 00.0″</p>
+                </div>
+                <img src="eagle_nebula.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Wild Duck Cluster (M11)</h2>
+                    <p>Description: A dense open cluster resembling a flock of ducks, located in Scutum.</p>
+                    <p>RA: 18h 51m 05.00s</p>
+                    <p>Dec: −06° 16′ 12.0″</p>
+                </div>
+                <img src="wild-duck-cluster.jpg" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">August</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>North America Nebula (NGC 7000)</h2>
+                    <p>Description: An emission nebula shaped like the continent, located in Cygnus.</p>
+                    <p>RA :20h 58m 54.00s</p>
+                    <p>Dec :+44° 20′ 00.0″</p>
+                </div>
+                <img src="north-america-nebula.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Dumbbell Nebula (M27)</h2>
+                    <p>Description: A bright planetary nebula with a dumbbell shape, located in Vulpecula.</p>
+                    <p>RA: 19h 59m 36.34s</p>
+                    <p> Dec: +22° 43′ 16.1″</p>
+                </div>
+                <img src="dumbbell-nebula.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Crescent Nebula (NGC 6888)</h2>
+                    <p>Description: A stellar wind nebula shaped like a crescent, located in Cygnus.</p>
+                    <p>RA: 20h 12m 07.25s</p>
+                    <p>Dec: +38° 21′ 17.4″</p>
+                </div>
+                <img src="crescent-nebula.jpg" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">September</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Triangulum Galaxy (M33)</h2>
+                    <p>Description: A spiral galaxy smaller than Andromeda but rich in star-forming regions, located in the constellation Triangulum.</p>
+                    <p>RA :01h 33m 50.89s</p>
+                    <p>Dec :+30° 39′ 36.8″</p>
+                </div>
+                <img src="Triangulum_Galaxy.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Double Cluster (NGC 869 and NGC 884)</h2>
+                    <p>Description: Two adjacent open clusters shining brightly in Perseus.</p>
+                    <p>RA: 02h 19m 00.00s</p>
+                    <p> Dec: +57° 08′ 00.0″</p>
+                </div>
+                <img src="Double_Cluster.webp" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Helix Nebula (NGC 7293)</h2>
+                    <p>Description: A large, nearby planetary nebula, often called the Eye of God, in Aquarius.</p>
+                    <p>RA: 22h 29m 38.55s</p>
+                    <p>Dec: −20° 50′ 13.6″</p>
+                </div>
+                <img src="helix_nebula.avif" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">October</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Great Square of Pegasus</h2>
+                    <p>Description: A prominent asterism that serves as a gateway to faint galaxies like NGC 7331, in Pegasus.</p>
+                    <p>RA :23h 07m 04.00s</p>
+                    <p>Dec :+34° 24′ 01.0″</p>
+                </div>
+                <img src="Pegasus-Square-Great-Square_.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Stephan’s Quintet</h2>
+                    <p>Description: A group of five interacting galaxies, located in the constellation Pegasus.</p>
+                    <p>RA: 22h 35m 57.57s</p>
+                    <p> Dec: +33° 57′ 36.0″</p>
+                </div>
+                <img src="Stephan’s_Quintet.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>California Nebula (NGC 1499)</h2>
+                    <p>Description: A bright emission nebula resembling the outline of California, in Perseus.</p>
+                    <p>RA: 04h 03m 14.00s</p>
+                    <p>Dec: +36° 25′ 18.0″</p>
+                </div>
+                <img src="California_Nebula.jpg" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">November</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Heart Nebula (IC 1805)</h2>
+                    <p>Description:  A large emission nebula shaped like a heart, located in Cassiopeia.</p>
+                    <p>RA :02h 33m 22.00s</p>
+                    <p>Dec :+61° 26′ 46.0″</p>
+                </div>
+                <img src="Heart_Nebula.jpg_large.jpg" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Soul Nebula (IC 1848)</h2>
+                    <p>Description: A neighboring emission nebula to the Heart Nebula, in Cassiopeia.</p>
+                    <p>RA: 02h 51m 18.00s</p>
+                    <p> Dec: +60° 26′ 52.0″</p>
+                </div>
+                <img src="Soul_Nebula.jpg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Bubble Nebula (NGC 7635)</h2>
+                    <p>Description:  A bubble-shaped nebula created by stellar winds, located in Cassiopeia.</p>
+                    <p>RA: 23h 20m 48.00s</p>
+                    <p>Dec: +61° 11′ 15.0″</p>
+                </div>
+                <img src="Bubble_Nebula.jpg" alt="Nebulae in Orion">
+            </div>
+        </div>
+    </div>
+
+    <div class="month-box">
+        <h2 class="month-label">December</h2>
+        <div class="fact-container">
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Christmas Tree Cluster (NGC 2264)</h2>
+                    <p>Description: A star cluster and nebula forming a tree-like shape, located in Monoceros</p>
+                    <p>RA :06h 41m 00.00s</p>
+                    <p>Dec :+09° 53′ 42.0″</p>
+                </div>
+                <img src="Christmas-Tree-Cluster.png" alt="Nebulae in Orion">
+            </div>
+
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Witch Head Nebula (IC 2118)</h2>
+                    <p>Description: A reflection nebula shaped like a witch’s profile, located in Eridanus.</p>
+                    <p>RA: 05h 01m 02.00s</p>
+                    <p> Dec: −07° 53′ 00.0″</p>
+                </div>
+                <img src="Witch_Head_Nebula.jpeg" alt="Nebulae in Orion">
+            </div>
+            <div class="fact-box">
+                <div class="text">
+                    <h2>Cone Nebula (NGC 2264)</h2>
+                    <p>Description: A dark nebula with a distinctive cone shape, located in Monoceros near the Christmas Tree Cluster.</p>
+                    <p>RA: 06h 41m 10.00s</p>
+                    <p>Dec: +09° 53′ 00.0″</p>
+                </div>
+                <img src="cone_nebula.jpeg" alt="Nebulae in Orion">
+            </div>
         </div>
     </div>
     <footer>
@@ -192,4 +636,5 @@
     </footer>
 </body>
 </html>
+
 
