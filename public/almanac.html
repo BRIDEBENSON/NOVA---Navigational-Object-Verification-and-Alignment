@@ -6,61 +6,6 @@
     <title>Almanac</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #000000, #090333, #1a0554);
-            color: #fff;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background: rgba(13, 13, 48, 0.9);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            color: #a0b8ff;
-            text-align: center;
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        nav {
-            margin-top: 1rem;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            gap: 1.5rem;
-        }
-
-        nav ul li {
-            margin: 0;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            background: rgba(88, 111, 253, 0.2);
-            box-shadow: 0 0 15px rgba(88, 111, 253, 0.5);
-        }
-
         .fact-container {
             display: flex;
             flex-direction: column;
@@ -68,6 +13,7 @@
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
+            margin-top: 30px;
         }
 
         .fact-box {
@@ -77,8 +23,11 @@
             background: rgba(13, 13, 48, 0.8);
             padding: 1.5rem;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(88, 111, 253, 0.3);
+            box-shadow: 0 0 15px rgba(9, 18, 83, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 15px 0;
+            padding: 10px;
+            background: #ffffff;
         }
 
         .fact-box:hover {
@@ -94,7 +43,7 @@
         .fact-box h2 {
             margin-bottom: 1rem;
             font-size: 1.8rem;
-            color: #81a4ff;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .fact-box p {
@@ -117,13 +66,10 @@
             max-width: 150px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
+            width: 150px;
+            height: auto;
+            margin-left: 20px;
+            object-fit: cover;
         }
 
         .page-title {
@@ -136,65 +82,44 @@
             margin: 20px auto;
             padding: 20px;
             max-width: 900px;
-            background: #ffffff;
+            background:  #08032a; /* Updated to purple */
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
+
         .month-label {
             position: absolute;
             top: -15px;
             left: 20px;
-            background: #007BFF;
+            background: #4e21a9;
             color: #fff;
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 1rem;
         }
 
-.fact-container {
-    margin-top: 30px;
-}
+        .text {
+            flex: 1;
+        }
 
-.fact-box {
-    display: flex;
-    align-items: center;
-    margin: 15px 0;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        .text h2 {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 5px;
+        }
 
-.fact-box img {
-    width: 150px;
-    height: auto;
-    margin-left: 20px;
-    border-radius: 5px;
-    object-fit: cover;
-}
+        .text p, .text ul {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #666;
+        }
 
-.text {
-    flex: 1;
-}
-
-.text h2 {
-    font-size: 1.2rem;
-    color: #444;
-    margin-bottom: 5px;
-}
-
-.text p, .text ul {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #666;
-}
-
-.text ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
+        .text ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -216,6 +141,8 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
     <h6 class="welcome">Almanac</h6>
     <div class="month-box">
         <h2 class="month-label">January</h2>
@@ -232,22 +159,18 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Beehive Cluster (M44)</h2>
-                    <ul>
-                        <li><strong>Description:</strong>A bright open cluster resembling a swarm of bees, located in Cancer.</li>
-                        <li><strong>RA:</strong>08h 40m 24.00s</li>
-                        <li><strong>Dec:</strongs>+19° 41′ 00.0″</li>
-                    </ul>
+                    <p>A bright open cluster resembling a swarm of bees, located in Cancer.</p>
+                    <p>RA: 08h 40m 24.00s<p>
+                    <p>Dec: +19° 41′ 00.0″</p>
                 </div>
                 <img src="images/Beehive-Cluster.webp" alt="Prominent Stars">
             </div>
             <div class="fact-box">
                 <div class="text">
                     <h2>Andromeda Galaxy (M31)</h2>
-                    <ul>
-                        <li><strong>Description:</strong>The closest large spiral galaxy, visible to the naked eye, in the constellation Andromeda.</li>
-                        <li><strong>RA:</strong>00h 42m 44.30s</li>
-                        <li><strong>Dec:</strongs>+41° 16′ 09.0″</li>
-                    </ul>
+                    <p>The closest large spiral galaxy, visible to the naked eye, in the constellation Andromeda.</p>
+                    <p>RA: 00h 42m 44.30s</p>
+                    <p>Dec: +41° 16′ 09.0″</p>
                 </div>
                 <img src="images/Andromeda_Galaxy.jpg" alt="Prominent Stars">
             </div>
@@ -261,7 +184,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Pleiades (M45)</h2>
-                    <p>Description: A bright open cluster with bluish nebulosity, located in the constellation Taurus.</p>
+                    <p>A bright open cluster with bluish nebulosity, located in the constellation Taurus.</p>
                     <p>RA: 03h 47m 24.00s</p>
                     <p>Dec: +24° 07′ 00.0″</p>
                 </div>
@@ -271,7 +194,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Eskimo Nebula (NGC 2392)</h2>
-                    <p>Description: A planetary nebula resembling a face in a parka, located in Gemini.</p>
+                    <p>A planetary nebula resembling a face in a parka, located in Gemini.</p>
                     <p>RA: 07h 29m 10.77s</p>
                     <p> Dec: +20° 54′ 42.6″</p>
                 </div>
@@ -280,7 +203,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Horsehead Nebula (Barnard 33)</h2>
-                    <p>Description: A dark nebula shaped like a horse's head, silhouetted against a bright nebula in Orion.</p>
+                    <p>A dark nebula shaped like a horse's head, silhouetted against a bright nebula in Orion.</p>
                     <p>RA: 05h 40m 59.00s</p>
                     <p>Dec: −02° 27′ 30.0″</p>
                 </div>
@@ -295,7 +218,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Leo Triplet (M65, M66, NGC 3628)</h2>
-                    <p>Description:  A group of three interacting galaxies in the constellation Leo.</p>
+                    <p>A group of three interacting galaxies in the constellation Leo.</p>
                     <p>RA (M65): 11h 18m 55.96s, Dec: +13° 05′ 32.3″</p>
                     <p>Dec (M66): 11h 20m 14.96s, Dec: +12° 59′ 29.5″</p>
                     <p>RA (NGC 3628): 11h 20m 16.47s, Dec: +13° 35′ 12.7″</p>
@@ -306,7 +229,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Hydra Galaxy Cluster (Abell 1060)</h2>
-                    <p>Description: A dense galaxy cluster in the constellation Hydra, containing over 100 galaxies.</p>
+                    <p>A dense galaxy cluster in the constellation Hydra, containing over 100 galaxies.</p>
                     <p>RA: 10h 36m 42.00s</p>
                     <p> Dec: −27° 31′ 00.0″</p>
                 </div>
@@ -315,7 +238,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Rosette Nebula (NGC 2237-39)</h2>
-                    <p>Description: A large, circular emission nebula resembling a blooming rose, located in Monoceros.</p>
+                    <p>A large, circular emission nebula resembling a blooming rose, located in Monoceros.</p>
                     <p>RA: 06h 31m 55.00s</p>
                     <p>Dec: +04° 57′ 00.0″</p>
                 </div>
@@ -330,7 +253,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Hercules Globular Cluster (M13)</h2>
-                    <p>Description:  A dense globular cluster with hundreds of thousands of stars, in Hercules.</p>
+                    <p>A dense globular cluster with hundreds of thousands of stars, in Hercules.</p>
                     <p>RA :16h 41m 41.24s</p>
                     <p>Dec :+36° 27′ 40.7″</p>
                 </div>
@@ -340,7 +263,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Sombrero Galaxy (M104)</h2>
-                    <p>Description:  A spiral galaxy with a striking dust lane, located in Virgo.</p>
+                    <p>A spiral galaxy with a striking dust lane, located in Virgo.</p>
                     <p>RA:  12h 39m 59.43s</p>
                     <p> Dec: −11° 37′ 23.0</p>
                 </div>
@@ -349,7 +272,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Flame Nebula (NGC 2024)</h2>
-                    <p>Description: A glowing emission nebula near Alnitak in Orion’s Belt, located in Orion.</p>
+                    <p>A glowing emission nebula near Alnitak in Orion’s Belt, located in Orion.</p>
                     <p>RA: 05h 41m 42.00s</p>
                     <p>Dec: −01° 51′ 00.0″</p>
                 </div>
@@ -364,7 +287,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Ring Nebula (M57)</h2>
-                    <p>Description:  A small, colorful planetary nebula resembling a ring, located in Lyra.</p>
+                    <p>A small, colorful planetary nebula resembling a ring, located in Lyra.</p>
                     <p>RA :18h 53m 35.08s</p>
                     <p>Dec :+33° 01′ 45.0″</p>
                 </div>
@@ -374,7 +297,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>M92</h2>
-                    <p>Description: A bright globular cluster often overshadowed by M13, located in Hercules.</p>
+                    <p>A bright globular cluster often overshadowed by M13, located in Hercules.</p>
                     <p>RA: 17h 17m 07.39s</p>
                     <p> Dec: +43° 08′ 09.4″</p>
                 </div>
@@ -383,7 +306,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Black Eye Galaxy (M64)</h2>
-                    <p>Description:  A spiral galaxy with a prominent dark dust feature, located in Coma Berenices</p>
+                    <p>A spiral galaxy with a prominent dark dust feature, located in Coma Berenices</p>
                     <p>RA: 12h 56m 43.73s</p>
                     <p>Dec: +21° 40′ 58.3″</p>
                 </div>
@@ -398,7 +321,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Lagoon Nebula (M8)</h2>
-                    <p>Description: A bright emission nebula with dark lanes, located in Sagittarius.</p>
+                    <p>A bright emission nebula with dark lanes, located in Sagittarius.</p>
                     <p>RA : 18h 03m 37.00s
                     </p>
                     <p>Dec : −24° 23′ 12.0″</p>
@@ -409,7 +332,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Omega Nebula (M17)</h2>
-                    <p>Description: A swan-shaped emission nebula, also known as the Swan Nebula, in Sagittarius.</p>
+                    <p>A swan-shaped emission nebula, also known as the Swan Nebula, in Sagittarius.</p>
                     <p>RA: 18h 20m 26.00s
                     </p>
                     <p> Dec: −16° 10′ 36.0″</p>
@@ -419,7 +342,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Sagittarius Star Cloud (M24)</h2>
-                    <p>Description:  A dense star field within the Milky Way, located in Sagittarius</p>
+                    <p>A dense star field within the Milky Way, located in Sagittarius</p>
                     <p>RA: 18h 17m 00.00s
                     </p>
                     <p>Dec: −18° 29′ 00.0″</p>
@@ -435,7 +358,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Trifid Nebula (M20)</h2>
-                    <p>Description:  A nebula combining emission, reflection, and dark regions, located in Sagittarius.</p>
+                    <p>A nebula combining emission, reflection, and dark regions, located in Sagittarius.</p>
                     <p>RA :18h 02m 23.00s</p>
                     <p>Dec :−22° 58′ 18.0″</p>
                 </div>
@@ -445,7 +368,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Eagle Nebula (M16)</h2>
-                    <p>Description: Famous for the "Pillars of Creation," this emission nebula is located in Serpens.</p>
+                    <p>Famous for the "Pillars of Creation," this emission nebula is located in Serpens.</p>
                     <p>RA: 18h 18m 48.00s</p>
                     <p> Dec: −13° 49′ 00.0″</p>
                 </div>
@@ -454,7 +377,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Wild Duck Cluster (M11)</h2>
-                    <p>Description: A dense open cluster resembling a flock of ducks, located in Scutum.</p>
+                    <p>A dense open cluster resembling a flock of ducks, located in Scutum.</p>
                     <p>RA: 18h 51m 05.00s</p>
                     <p>Dec: −06° 16′ 12.0″</p>
                 </div>
@@ -469,7 +392,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>North America Nebula (NGC 7000)</h2>
-                    <p>Description: An emission nebula shaped like the continent, located in Cygnus.</p>
+                    <p>An emission nebula shaped like the continent, located in Cygnus.</p>
                     <p>RA :20h 58m 54.00s</p>
                     <p>Dec :+44° 20′ 00.0″</p>
                 </div>
@@ -479,7 +402,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Dumbbell Nebula (M27)</h2>
-                    <p>Description: A bright planetary nebula with a dumbbell shape, located in Vulpecula.</p>
+                    <p>A bright planetary nebula with a dumbbell shape, located in Vulpecula.</p>
                     <p>RA: 19h 59m 36.34s</p>
                     <p> Dec: +22° 43′ 16.1″</p>
                 </div>
@@ -488,7 +411,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Crescent Nebula (NGC 6888)</h2>
-                    <p>Description: A stellar wind nebula shaped like a crescent, located in Cygnus.</p>
+                    <p>A stellar wind nebula shaped like a crescent, located in Cygnus.</p>
                     <p>RA: 20h 12m 07.25s</p>
                     <p>Dec: +38° 21′ 17.4″</p>
                 </div>
@@ -503,7 +426,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Triangulum Galaxy (M33)</h2>
-                    <p>Description: A spiral galaxy smaller than Andromeda but rich in star-forming regions, located in the constellation Triangulum.</p>
+                    <p>A spiral galaxy smaller than Andromeda but rich in star-forming regions, located in the constellation Triangulum.</p>
                     <p>RA :01h 33m 50.89s</p>
                     <p>Dec :+30° 39′ 36.8″</p>
                 </div>
@@ -513,7 +436,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Double Cluster (NGC 869 and NGC 884)</h2>
-                    <p>Description: Two adjacent open clusters shining brightly in Perseus.</p>
+                    <p>Two adjacent open clusters shining brightly in Perseus.</p>
                     <p>RA: 02h 19m 00.00s</p>
                     <p> Dec: +57° 08′ 00.0″</p>
                 </div>
@@ -522,7 +445,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Helix Nebula (NGC 7293)</h2>
-                    <p>Description: A large, nearby planetary nebula, often called the Eye of God, in Aquarius.</p>
+                    <p>A large, nearby planetary nebula, often called the Eye of God, in Aquarius.</p>
                     <p>RA: 22h 29m 38.55s</p>
                     <p>Dec: −20° 50′ 13.6″</p>
                 </div>
@@ -537,7 +460,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Great Square of Pegasus</h2>
-                    <p>Description: A prominent asterism that serves as a gateway to faint galaxies like NGC 7331, in Pegasus.</p>
+                    <p>A prominent asterism that serves as a gateway to faint galaxies like NGC 7331, in Pegasus.</p>
                     <p>RA :23h 07m 04.00s</p>
                     <p>Dec :+34° 24′ 01.0″</p>
                 </div>
@@ -547,7 +470,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Stephan’s Quintet</h2>
-                    <p>Description: A group of five interacting galaxies, located in the constellation Pegasus.</p>
+                    <p>A group of five interacting galaxies, located in the constellation Pegasus.</p>
                     <p>RA: 22h 35m 57.57s</p>
                     <p> Dec: +33° 57′ 36.0″</p>
                 </div>
@@ -556,7 +479,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>California Nebula (NGC 1499)</h2>
-                    <p>Description: A bright emission nebula resembling the outline of California, in Perseus.</p>
+                    <p>A bright emission nebula resembling the outline of California, in Perseus.</p>
                     <p>RA: 04h 03m 14.00s</p>
                     <p>Dec: +36° 25′ 18.0″</p>
                 </div>
@@ -571,7 +494,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Heart Nebula (IC 1805)</h2>
-                    <p>Description:  A large emission nebula shaped like a heart, located in Cassiopeia.</p>
+                    <p>A large emission nebula shaped like a heart, located in Cassiopeia.</p>
                     <p>RA :02h 33m 22.00s</p>
                     <p>Dec :+61° 26′ 46.0″</p>
                 </div>
@@ -581,7 +504,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Soul Nebula (IC 1848)</h2>
-                    <p>Description: A neighboring emission nebula to the Heart Nebula, in Cassiopeia.</p>
+                    <p>A neighboring emission nebula to the Heart Nebula, in Cassiopeia.</p>
                     <p>RA: 02h 51m 18.00s</p>
                     <p> Dec: +60° 26′ 52.0″</p>
                 </div>
@@ -590,7 +513,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Bubble Nebula (NGC 7635)</h2>
-                    <p>Description:  A bubble-shaped nebula created by stellar winds, located in Cassiopeia.</p>
+                    <p>A bubble-shaped nebula created by stellar winds, located in Cassiopeia.</p>
                     <p>RA: 23h 20m 48.00s</p>
                     <p>Dec: +61° 11′ 15.0″</p>
                 </div>
@@ -605,7 +528,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Christmas Tree Cluster (NGC 2264)</h2>
-                    <p>Description: A star cluster and nebula forming a tree-like shape, located in Monoceros</p>
+                    <p>A star cluster and nebula forming a tree-like shape, located in Monoceros</p>
                     <p>RA :06h 41m 00.00s</p>
                     <p>Dec :+09° 53′ 42.0″</p>
                 </div>
@@ -615,7 +538,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Witch Head Nebula (IC 2118)</h2>
-                    <p>Description: A reflection nebula shaped like a witch’s profile, located in Eridanus.</p>
+                    <p>A reflection nebula shaped like a witch’s profile, located in Eridanus.</p>
                     <p>RA: 05h 01m 02.00s</p>
                     <p> Dec: −07° 53′ 00.0″</p>
                 </div>
@@ -624,7 +547,7 @@
             <div class="fact-box">
                 <div class="text">
                     <h2>Cone Nebula (NGC 2264)</h2>
-                    <p>Description: A dark nebula with a distinctive cone shape, located in Monoceros near the Christmas Tree Cluster.</p>
+                    <p>A dark nebula with a distinctive cone shape, located in Monoceros near the Christmas Tree Cluster.</p>
                     <p>RA: 06h 41m 10.00s</p>
                     <p>Dec: +09° 53′ 00.0″</p>
                 </div>
