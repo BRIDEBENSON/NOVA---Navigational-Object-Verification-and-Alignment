@@ -303,3 +303,23 @@ ul li a {
     margin-top: 0.3rem; /* Space between logo and text */
     text-align: center;
 }
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13, 13, 48, 0.9);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    color: #a0b8ff;
+    margin: 0;
+    font-size: 1.8rem;
+    flex-shrink: 0; /* Ensures logo stays at its original size */
+}
+
+
