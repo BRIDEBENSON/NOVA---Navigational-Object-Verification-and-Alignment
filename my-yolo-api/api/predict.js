@@ -1,14 +1,10 @@
-const express = require("express");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const ort = require("onnxruntime-node"); // ONNX Runtime
-
-const app = express();
-app.use(express.json());
+const ort = require("onnxruntime-node");
 
 const MODEL_URL = "https://raw.githubusercontent.com/BRIDEBENSON/NOVA---Navigational-Object-Verification-and-Alignment/main/yolov8.onnx";
-const MODEL_PATH = "/tmp/yolov8.onnx"; // Temporary path in Vercel
+const MODEL_PATH = "/tmp/yolov8.onnx"; // Vercel uses /tmp for temporary files
 
 let session;
 
@@ -30,22 +26,18 @@ async function loadModel() {
     console.log("Model loaded successfully!");
 }
 
-// Load the model when the server starts
+// Load model at startup
 loadModel();
 
-// API route to run inference
-app.post("/api/predict", async (req, res) => {
-    try {
-        if (!session) {
-            return res.status(500).json({ error: "Model not loaded yet." });
-        }
-
-        // Process input image (For now, let's just return a success message)
-        return res.json({ message: "API is working! Model is ready for inference." });
-    } catch (error) {
-        console.error("Error running model:", error);
-        return res.status(500).json({ error: "Error running model" });
+// Vercel API function
+module.exports = async (req, res) => {
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Method Not Allowed" });
     }
-});
 
-module.exports = app;
+    if (!session) {
+        return res.status(500).json({ error: "Model not loaded yet." });
+    }
+
+    return res.json({ message: "API is working! Model is ready for inference." });
+};

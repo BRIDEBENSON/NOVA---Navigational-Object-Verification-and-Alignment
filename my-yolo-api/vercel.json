@@ -1,5 +1,6 @@
 {
-    "version": 2,
-    "routes": [{ "src": "/api/predict", "dest": "api/predict.js" }]
-  }
-  
+  "version": 2,
+  "routes": [
+    { "src": "/api/predict", "dest": "/api/predict.js" }
+  ]
+}
