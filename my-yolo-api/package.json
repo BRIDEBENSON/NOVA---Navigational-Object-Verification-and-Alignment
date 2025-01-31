@@ -1,0 +1,17 @@
+{
+  "name": "my-yolo-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api/predict.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "onnxruntime-node": "^1.15.0",
+    "axios": "^1.4.0"
+  }
+}
