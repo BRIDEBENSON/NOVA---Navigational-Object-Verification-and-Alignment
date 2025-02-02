@@ -6,76 +6,117 @@
     <title>Star Visibility Checker</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        header {
-            background-color: #333;
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #818cf8;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid rgba(88, 111, 253, 0.2);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4f46e5, #818cf8);
             color: white;
-            padding: 10px 0;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
         }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(88, 111, 253, 0.5);
+        }
+        select {
+            background-color: black;
+            color: white;
+            padding: 0.5rem;
+            border: 1px solid rgba(88, 111, 253, 0.2);
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 1rem;
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
+        select option {
+            background-color: white;
+            color: black;
+        }
+        .instructions-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(88, 111, 253, 0.2);
+            border-radius: 10px;
+            color: #fff;
         }
 
-        .logo {
-            width: 40px;
-            margin-right: 10px;
+        .instructions-title {
+            color: #818cf8;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
-        .logo-text {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        nav ul {
-            list-style-type: none;
+        .instructions-list {
+            list-style: none;
             padding: 0;
             margin: 0;
-            display: flex;
         }
 
-        nav ul li {
-            margin: 0 10px;
+        .instructions-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
         }
 
-        nav ul li a {
+        .instructions-list li::before {
+            content: "•";
+            color: #818cf8;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .instructions-note {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(88, 111, 253, 0.2);
+            font-style: italic;
+            color: #818cf8;
+        }
+        #camera-feed-btn {
+            display: none; /* Initially hidden */
+            margin: 1rem auto;
+            padding: 0.8rem 1.5rem;
+            background-color: #4f46e5;
+            color: #fff;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
             text-decoration: none;
-            color: white;
-            padding: 5px 10px;
+            width: fit-content;
         }
 
-        nav ul li a:hover {
-            background-color: #555;
-            border-radius: 5px;
-        }
-
-        .container {
-            flex: 1; /* Allows the content area to stretch and push the footer to the bottom */
-            padding: 20px;
-        }
-
-        .instructions-box {
-            background-color: transparent; /* Black background */
-            color: white;           /* White text */
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
+        #camera-feed-btn:hover {
+            background-color: #3b3bd1;
         }
     </style>
 </head>
@@ -95,24 +136,23 @@
             </ul>
         </nav>
     </header>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="container">
-        <h2>Instructions</h2>
-        <div class="instructions-box">
-            <h3>How to Use the Star Visibility Checker:</h3>
-            <p>1. Enter the location coordinates (latitude and longitude) in the input fields provided.</p>
-            <p>2. Select the date and time for which you want to check star visibility.</p>
-            <p>3. Click the "Check Visibility" button to generate results.</p>
-            <p>4. The results will display the visibility status of major constellations and celestial objects.</p>
-            <p>5. For detailed instructions, refer to the Almanac section or contact us through the email provided below.</p>
-        </div>
-    </div>
     <main>
+        <h6 class="welcome">Celestial Object Visibility Checker</h6>
+        <div class="instructions-container">
+            <h2 class="instructions-title">How to Use the Star Visibility Checker</h2>
+            <ol class="instructions-list">
+                <li>Choose a celestial object from the dropdown menu or enter custom coordinates (RA/Dec).</li>
+                <li>Select your location from the predefined options or allow the system to detect your current location.</li>
+                <li>If using a custom location, enter your latitude and longitude in decimal degrees.</li>
+                <li>Click "Check Visibility" to see if the object is currently visible from your location.</li>
+                <li>The results will display the object's current altitude and azimuth, along with rise/set times.</li>
+            </ol>
+            <div class="instructions-note">
+                Note: For best results, ensure your location data is accurate. Negative values are used for South latitude and West longitude.
+            </div>
+        </div>
         <section id="visibility-form">
-            <h2>Input your target celestial object coordinates:</h2>
+            <h2>Check Celestial Object Visibility</h2>
             <form id="visibilityForm">
                 <label for="celestialObject">Select Celestial Object:</label>
                 <select id="celestialObject" onchange="updateRAandDec()">
@@ -139,7 +179,21 @@
                 <button type="button" id="checkButton">Check Visibility</button>
             </form>
         </section>
+        <section id="visibility-form">
+            <label for="visibility-status">Visibility Status:</label>
+            <select id="visibility-status">
+                <option value="not-visible">Not Visible</option>
+                <option value="visible">Visible</option>
+            </select>
+
+            <!-- Camera Feed Button (Initially Hidden) -->
+            <a id="camera-feed-btn" href="camera.html">Camera Feed</a>
+        </section>
     </main>
+    <footer>
+        <p>&copy; 2024 Nova</p>
+        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
+    </footer>
     <script>
         function getUserLocation() {
     const locationSelect = document.getElementById('location'); // Get the location select element
@@ -362,10 +416,14 @@ if (altNow > 0) {
 }
 alert(message);
         }
+        document.getElementById('visibility-status').addEventListener('change', function() {
+            var cameraButton = document.getElementById('camera-feed-btn');
+            if (this.value === "visible") {
+                cameraButton.style.display = "block";
+            } else {
+                cameraButton.style.display = "none";
+            }
+        });
     </script>      
-    <footer>
-        <p>&copy; 2024 Nova</p>
-        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
-    </footer>  
 </body>
 </html>
