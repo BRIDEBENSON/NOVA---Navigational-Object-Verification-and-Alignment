@@ -21,6 +21,16 @@ app.add_middleware(
 async def root():
     return FileResponse("localserver.html")
 
+# Serve the sample.html file
+@app.get("/sample")
+async def sample():
+    return FileResponse("sample.html")
+
+# New endpoint to get latest predictions
+@app.get("/get-predictions")
+async def get_predictions():
+    return latest_predictions
+
 # Load YOLO model
 MODEL_PATH = 'yolov8.pt'
 try:
@@ -61,7 +71,11 @@ async def predict(file: UploadFile):
             }
             predictions.append(pred)
             
-        return {"predictions": predictions}
+         # Store the latest predictions
+        global latest_predictions
+        latest_predictions = {"predictions": predictions}
+            
+        return latest_predictions
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
