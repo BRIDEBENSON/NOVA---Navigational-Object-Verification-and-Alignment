@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Constellation Detection</title>
+    <style>
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        canvas, video {
+            border: 1px solid black;
+            margin: 10px 0;
+        }
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .predictions {
+            max-width: 400px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+        .predictions h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .predictions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .predictions p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Nova Logo" class="logo">
+                <span class="logo-text">NOVA</span>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="telyaid.html">TelyAid</a></li>
+                <li><a href="svc.html">Star Visibility Checker</a></li>
+                <li><a href="almanac.html">Almanac</a></li>
+                <li><a href="team.html">Team</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <div class="control-panel">
+            <div>
+                <h3>File Upload</h3>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            
+            <div>
+                <h3>Webcam</h3>
+                <video id="video" width="640" height="480" autoplay></video>
+                <canvas id="preview" width="640" height="480"></canvas>
+                <div>
+                    <button id="startWebcam">Start Webcam</button>
+                    <button id="stopWebcam">Stop Webcam</button>
+                    <button id="captureFrame">Capture Frame</button>
+                    <button id="startLive">Start Live Detection</button>
+                    <button id="stopLive">Stop Live Detection</button>
+                </div>
+            </div>
+        </div>
+        <div class="predictions">
+            <h3>Predictions:</h3>
+            <pre id="result"></pre>
+        </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Nova</p>
+        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
+    </footer>
+    <script>
+        const video = document.getElementById('video');
+const canvas = document.getElementById('preview');
+const ctx = canvas.getContext('2d');
+let liveDetectionInterval = null;
+let currentImage = null;
+let stream = null;  // Global stream variable
+
+        // Start webcam
+document.getElementById('startWebcam').addEventListener('click', async () => {
+    try {
+        // Remove the 'const' declaration here since we're using the global stream variable
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: {
+                width: 640,
+                height: 480
+            } 
+        });
+        video.srcObject = stream;
+    } catch (err) {
+        console.error("Error accessing webcam:", err);
+    }
+});
+
+// Stop webcam
+document.getElementById('stopWebcam').addEventListener('click', () => {
+    if (stream) {
+        // Stop all tracks in the stream
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        stream = null;
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Also stop live detection if it's running
+        if (liveDetectionInterval) {
+            clearInterval(liveDetectionInterval);
+            liveDetectionInterval = null;
+        }
+
+        // Reset canvas dimensions to default
+        canvas.width = 640;
+        canvas.height = 480;
+    }
+});
+
+        // Capture single frame
+        document.getElementById('captureFrame').addEventListener('click', () => {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Store the current frame
+            currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // Convert canvas to blob and send to server
+            canvas.toBlob(sendImageForPrediction, 'image/jpeg');
+        });
+
+        // Start live detection
+        document.getElementById('startLive').addEventListener('click', () => {
+            if (!liveDetectionInterval) {
+                liveDetectionInterval = setInterval(() => {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(sendImageForPrediction, 'image/jpeg');
+                }, 1000); // Process one frame per second - adjust as needed
+            }
+        });
+
+        // Stop live detection
+        document.getElementById('stopLive').addEventListener('click', () => {
+            if (liveDetectionInterval) {
+                clearInterval(liveDetectionInterval);
+                liveDetectionInterval = null;
+            }
+        });
+
+        // Modified drawDetections function
+        const drawDetections = (data) => {
+    // Clear canvas first
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw the stored image
+    if (currentImage) {
+        ctx.putImageData(currentImage, 0, 0);
+    }
+    
+    // Draw predictions
+    data.predictions.forEach(pred => {
+        const [x1, y1, x2, y2] = pred.bbox;
+        // Draw bounding box
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+        
+        // Draw confidence text
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = 3;
+        ctx.font = '14px Arial';
+        const text = `Confidence: ${(pred.confidence * 100).toFixed(1)}%`;
+        ctx.strokeText(text, x1, y1 - 5);
+        ctx.fillText(text, x1, y1 - 5);
+        
+        // Draw all keypoints
+        pred.keypoints.forEach((point, index) => {
+            const [x, y, conf] = point;
+            
+            // Draw point
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            // Color based on confidence
+            const alpha = Math.max(0.3, conf); // Minimum opacity of 0.3
+            ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw point number
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.font = '12px Arial';
+            
+            // Point number
+            ctx.strokeText(index + 1, x + 6, y - 6);
+            ctx.fillText(index + 1, x + 6, y - 6);
+        });
+    });
+};
+
+        // Function to format predictions in a readable way
+        const formatPredictions = (data) => {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
+    
+    data.predictions.forEach((pred, index) => {
+        const predDiv = document.createElement('div');
+        predDiv.style.marginBottom = '20px';
+        predDiv.innerHTML = `
+            <h4>Detection ${index + 1}</h4>
+            <div style="margin-left: 10px">
+                <p><strong>Confidence:</strong> ${(pred.confidence * 100).toFixed(1)}%</p>
+                <p><strong>Bounding Box:</strong></p>
+                <ul style="margin: 5px 0">
+                    <li>Top-left: (${pred.bbox[0].toFixed(1)}, ${pred.bbox[1].toFixed(1)})</li>
+                    <li>Bottom-right: (${pred.bbox[2].toFixed(1)}, ${pred.bbox[3].toFixed(1)})</li>
+                </ul>
+                <p><strong>Keypoints:</strong></p>
+                <div style="margin-left: 10px">
+                    ${pred.keypoints.map((point, i) => `
+                        <p>Point ${i + 1}: (${point[0].toFixed(1)}, ${point[1].toFixed(1)}) - 
+                           Confidence: ${(point[2] * 100).toFixed(1)}%</p>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        resultDiv.appendChild(predDiv);
+    });
+};
+
+        // Modified sendImageForPrediction function with additional logging
+const sendImageForPrediction = async (imageBlob) => {
+    console.log("Sending image for prediction"); // Debug log
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', imageBlob);
+
+        console.log("Sending request to server..."); // Debug log
+        const response = await fetch('http://localhost:8000/predict', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const results = await response.json();
+        console.log("Received prediction results:", results); // Debug log
+        
+        // Format predictions in a readable way
+        formatPredictions(results);
+        
+        // Draw detections on the image
+        drawDetections(results);
+        
+    } catch (error) {
+        console.error("Error in sendImageForPrediction:", error);
+        document.getElementById('result').textContent = 'Error: ' + error.message;
+    }
+};
+
+// Modified File input handler with improved error handling and logging
+document.getElementById('imageInput').addEventListener('change', async (e) => {
+    console.log("Image upload triggered"); // Debug log
+    
+    // Stop webcam if it's running
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        stream = null;
+        
+        if (liveDetectionInterval) {
+            clearInterval(liveDetectionInterval);
+            liveDetectionInterval = null;
+        }
+    }
+
+    if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        console.log("Selected file:", file.name); // Debug log
+        
+        const img = new Image();
+        
+        img.onload = () => {
+            console.log("Image loaded, dimensions:", img.width, "x", img.height); // Debug log
+            
+            // Set canvas dimensions
+            canvas.width = Math.min(img.width, 1920); // Limit maximum width
+            canvas.height = Math.min(img.height, 1080); // Limit maximum height
+            
+            // Clear previous content
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw the image
+            try {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // Ensure blob creation and sending
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        console.log("Blob created, size:", blob.size); // Debug log
+                        sendImageForPrediction(blob);
+                    } else {
+                        console.error("Failed to create blob from canvas");
+                    }
+                }, 'image/jpeg', 0.95);
+                
+            } catch (error) {
+                console.error("Error drawing image to canvas:", error);
+            }
+        };
+
+        img.onerror = (error) => {
+            console.error("Error loading image:", error);
+        };
+
+        try {
+            const imageUrl = URL.createObjectURL(file);
+            img.src = imageUrl;
+            // Clean up object URL after image loads
+            img.onload = function() {
+                URL.revokeObjectURL(this.src);
+                // Draw and process image
+                canvas.width = Math.min(this.width, 1920);
+                canvas.height = Math.min(this.height, 1080);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+                currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        console.log("Sending blob to model, size:", blob.size);
+                        sendImageForPrediction(blob);
+                    }
+                }, 'image/jpeg', 0.95);
+            };
+        } catch (error) {
+            console.error("Error creating object URL:", error);
+        }
+    }
+});
+    </script>
+</body>
+</html>
