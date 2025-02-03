@@ -180,15 +180,11 @@
             </form>
         </section>
         <section id="visibility-form">
-            <label for="visibility-status">Visibility Status:</label>
-            <select id="visibility-status">
-                <option value="not-visible">Not Visible</option>
-                <option value="visible">Visible</option>
-            </select>
-
+            <label id="visibility-status-label"></label>
             <!-- Camera Feed Button (Initially Hidden) -->
-            <a id="camera-feed-btn" href="camera.html">Camera Feed</a>
+            <a id="camera-feed-btn" href="localserver.html" style="display: none;">Camera Feed</a>
         </section>
+        
     </main>
     <footer>
         <p>&copy; 2024 Nova</p>
@@ -196,7 +192,7 @@
     </footer>
     <script>
         function getUserLocation() {
-    const locationSelect = document.getElementById('location'); // Get the location select element
+    const locationSelect = document.getElementById('location');
     const latInput = document.getElementById('latitude');
     const longInput = document.getElementById('longitude');
 
@@ -206,12 +202,12 @@
                 latInput.value = position.coords.latitude.toFixed(6);
                 longInput.value = position.coords.longitude.toFixed(6);
                 if (locationSelect.querySelector('option[value="custom"]')) {
-                    locationSelect.value = "custom"; // Select "Custom" if it exists
+                    locationSelect.value = "custom";
                 }
             },
             (error) => {
                 console.error('Error fetching location:', error.message);
-                handleLocationError(error); // Call the error handler
+                handleLocationError(error);
             }
         );
     } else {
@@ -383,39 +379,48 @@ function azimuth(decDeg, latDeg, hAngleDeg) {
     }
     return azimuth;
 }
-       function checkVisibility() {
-            const ra = document.getElementById('ra').value;
-            const dec = document.getElementById('dec').value;
-            const latitude = parseFloat(document.getElementById('latitude').value);
-            const longitude = parseFloat(document.getElementById('longitude').value);
-            const dateTime = new Date();
+function checkVisibility() {
+    const ra = document.getElementById('ra').value;
+    const dec = document.getElementById('dec').value;
+    const latitude = parseFloat(document.getElementById('latitude').value);
+    const longitude = parseFloat(document.getElementById('longitude').value);
+    const dateTime = new Date();
+    const cameraButton = document.getElementById('camera-feed-btn');
+
+    if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
+        alert("Please enter all fields correctly.");
+        cameraButton.style.display = "none";
+        return;
+    }
+
+    const { h: raH, m: raM, s: raS } = parseTimeString(ra);
+    const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
+    const raDeg = hmsToHours(raH, raM, raS) * 15;
+    const decDeg = dmsToDegrees(decD, decM, decS);
+
+    const lst = calculateLST(longitude, dateTime);
+    const hAngle = ((lst - raDeg + 360) % 360);
+    const altNow = altitude(decDeg, latitude, hAngle);
+    const azNow = azimuth(decDeg, latitude, hAngle);
+
+    const visibility = calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime);
+
+    let message;
     
-            if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
-                alert("Please enter all fields correctly.");
-                return;
-            }
+    if (altNow > 0) {
+        message = `The celestial object is currently visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
+        
+        cameraButton.style.display = "block";
+        document.getElementById('visibility-status').value = "visible";
+    } else {
+        message = `The celestial object is currently not visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
+        
+        cameraButton.style.display = "none";
+        document.getElementById('visibility-status').value = "not-visible";
+    }
     
-            const { h: raH, m: raM, s: raS } = parseTimeString(ra);
-            const { d: decD, m: decM, s: decS } = parseDegreeString(dec);
-            const raDeg = hmsToHours(raH, raM, raS) * 15;
-            const decDeg = dmsToDegrees(decD, decM, decS);
-    
-            const lst = calculateLST(longitude, dateTime);
-            const hAngle = ((lst - raDeg + 360) % 360);
-            const altNow = altitude(decDeg, latitude, hAngle);
-            const azNow = azimuth(decDeg, latitude, hAngle);
-    
-            const visibility = calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime);
-    
-            let message;
-            
-if (altNow > 0) {
-    message = `The celestial object is currently visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
-} else {
-    message = `The celestial object is currently not visible  in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
+    alert(message);
 }
-alert(message);
-        }
         document.getElementById('visibility-status').addEventListener('change', function() {
             var cameraButton = document.getElementById('camera-feed-btn');
             if (this.value === "visible") {
