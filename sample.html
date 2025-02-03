@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #predictions {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+        .success {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h2>Latest Predictions</h2>
+    <div id="predictions">Loading predictions...</div>
+
+    <script>
+        // Function to fetch predictions
+        async function getPredictions() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/get-predictions');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Display the predictions
+                document.getElementById('predictions').innerHTML = 
+                    '<div class="success">Latest predictions:</div>' +
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('predictions').innerHTML = 
+                    `<div class="error">Error getting predictions: ${error.message}</div>`;
+            }
+        }
+
+        // Get predictions when page loads
+        getPredictions();
+
+        // Poll for new predictions every 2 seconds
+        setInterval(getPredictions, 5000);
+    </script>
+</body>
+</html>
