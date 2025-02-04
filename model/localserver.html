@@ -97,18 +97,82 @@
                 width: 90%;
             }
         }
+        /* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #090333, #1a0554);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Stars background effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(3px 3px at 5% 10%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 15% 25%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 20% 40%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 25% 15%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 35% 50%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 40% 80%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 45% 30%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 55% 70%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 60% 20%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 65% 90%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 70% 10%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 75% 40%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 80% 60%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 85% 15%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 90% 50%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 95% 75%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 25% 80%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 50% 90%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 30% 10%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 10% 85%, #fff, rgba(255, 255, 255, 0));
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: twinkle 4s infinite;
+    z-index: 0;
+    }
+    .welcome {
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #e0e7ff, #4f46e5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(88, 111, 253, 0.3);
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5, 0 0 30px #4f46e5; }
+    to { text-shadow: 0 0 20px #818cf8, 0 0 30px #818cf8, 0 0 40px #818cf8; }
+}
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo-container">
-                <img src="model\logo.png" alt="Nova Logo" class="logo">
-                <span class="logo-text">NOVA</span>
-            </div>
-        </nav>
-    </header>
     <main>
+        <br>
         <h6 class="welcome">Constellation Dectection</h6>
         <div class="container">
             <!-- Webcam & Uploaded Image in White Box -->
