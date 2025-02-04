@@ -3,44 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="model\style.css">
     <title>Constellation Detection</title>
     <style>
-        .container {
-            display: flex;
-            gap: 20px;
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        canvas, video {
-            border: 1px solid black;
-            margin: 10px 0;
-        }
-        .control-panel {
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000, #090333, #1a0554);
+            color: #fff;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 20px;
         }
-        button {
-            padding: 10px;
-            margin: 5px 0;
+
+        /* Stars background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 5% 10%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 15% 25%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 20% 40%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 25% 15%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 35% 50%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 40% 80%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 45% 30%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 55% 70%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 60% 20%, #fff, rgba(255, 255, 255, 0)),
+                radial-gradient(3px 3px at 65% 90%, #fff, rgba(255, 255, 255, 0));
+            background-repeat: no-repeat;
+            background-size: cover;
+            animation: twinkle 4s infinite;
+            z-index: -1;
         }
-        .predictions {
-            max-width: 400px;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-            font-family: Arial, sans-serif;
+
+        /* Welcome text styling */
+        .welcome {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #e0e7ff, #4f46e5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(88, 111, 253, 0.3);
         }
-        .predictions h4 {
-            margin: 0 0 10px 0;
-            color: #333;
-        }
-        .predictions ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .predictions p {
-            margin: 5px 0;
-        }
+
+        /* Container layout */
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -50,416 +74,351 @@
             margin-top: 20px;
         }
 
-        /* Style for webcam & image upload container */
+        /* Image container styling */
         .image-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 50%;
             min-width: 400px;
+            backdrop-filter: blur(5px);
         }
 
-        /* Style for predictions box */
+        /* Predictions box styling */
         .predictions {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
             width: 35%;
             min-width: 300px;
+            backdrop-filter: blur(5px);
+            color: #fff;
         }
 
-        /* Change predictions title color to violet */
-        .predictions h3 {
-            color: violet;
-        }
-
-        /* Make video and canvas uniform */
+        /* Video and canvas styling */
         canvas, video {
-            border: 2px solid #ccc;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             margin-top: 10px;
             max-width: 100%;
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        /* Responsive layout */
+        /* Button styling */
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(45deg, #4f46e5, #818cf8);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Headings */
+        h3 {
+            color: #e0e7ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(88, 111, 253, 0.3);
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        footer a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
                 align-items: center;
             }
-            .image-container, .predictions {
+            
+            .image-container,
+            .predictions {
                 width: 90%;
             }
+
+            .welcome {
+                font-size: 2rem;
+            }
         }
-        /* Base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-body {
-    font-family: 'Poppins', Arial, sans-serif;
-    line-height: 1.6;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #000000, #090333, #1a0554);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-}
+        /* Animation keyframes */
+        @keyframes twinkle {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
 
-/* Stars background effect */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(3px 3px at 5% 10%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 15% 25%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 20% 40%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 25% 15%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 35% 50%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 40% 80%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 45% 30%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 55% 70%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 60% 20%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 65% 90%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 70% 10%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 75% 40%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 80% 60%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 85% 15%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 90% 50%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 95% 75%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 25% 80%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 50% 90%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 30% 10%, #fff, rgba(255, 255, 255, 0)),
-        radial-gradient(3px 3px at 10% 85%, #fff, rgba(255, 255, 255, 0));
-    background-repeat: no-repeat;
-    background-size: cover;
-    animation: twinkle 4s infinite;
-    z-index: 0;
-    }
-    .welcome {
-    font-size: 2.5rem;
-    font-weight: 600;
-    background: linear-gradient(45deg, #e0e7ff, #4f46e5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-align: center;
-    margin-bottom: 3rem;
-    text-shadow: 0 0 20px rgba(88, 111, 253, 0.3);
-}
-
-@keyframes glow {
-    from { text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5, 0 0 30px #4f46e5; }
-    to { text-shadow: 0 0 20px #818cf8, 0 0 30px #818cf8, 0 0 40px #818cf8; }
-}
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5, 0 0 30px #4f46e5; }
+            to { text-shadow: 0 0 20px #818cf8, 0 0 30px #818cf8, 0 0 40px #818cf8; }
+        }
     </style>
 </head>
 <body>
-    <main>
-        <br>
-        <h6 class="welcome">Constellation Dectection</h6>
-        <div class="container">
-            <!-- Webcam & Uploaded Image in White Box -->
+<main>
+    <br>
+    <h6 class="welcome">Constellation Detection</h6>
+    <div class="container">
+        <div>
+            <h3>File Upload</h3>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <div class="image-container">
+            <h3>Webcam & Uploaded Image</h3>
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="preview" width="640" height="480"></canvas>
             <div>
-                <h3>File Upload</h3>
-                <input type="file" id="imageInput" accept="image/*">
-            </div>
-            <div class="image-container">
-                <h3>Webcam & Uploaded Image</h3>
-                <video id="video" width="640" height="480" autoplay></video>
-                <canvas id="preview" width="640" height="480"></canvas>
-                <div>
-                    <button id="startWebcam">Start Webcam</button>
-                    <button id="stopWebcam">Stop Webcam</button>
-                    <button id="captureFrame">Capture Frame</button>
-                    <button id="startLive">Start Live Detection</button>
-                    <button id="stopLive">Stop Live Detection</button>
-                </div>
-            </div>
-
-            <!-- Predictions Box -->
-            <div class="predictions">
-                <h3>Predictions:</h3>
-                <pre id="result"></pre>
+                <button id="startWebcam">Start Webcam</button>
+                <button id="stopWebcam">Stop Webcam</button>
+                <button id="captureFrame">Capture Frame</button>
+                <button id="startLive">Start Live Detection</button>
+                <button id="stopLive">Stop Live Detection</button>
             </div>
         </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Nova</p>
-        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
-    </footer>
-    <script>
-        const video = document.getElementById('video');
-const canvas = document.getElementById('preview');
-const ctx = canvas.getContext('2d');
-let liveDetectionInterval = null;
-let currentImage = null;
-let stream = null;  // Global stream variable
+        <div class="predictions">
+            <h3>Predictions:</h3>
+            <pre id="result"></pre>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2024 Nova</p>
+    <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
+</footer>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('preview');
+    const ctx = canvas.getContext('2d');
+    let liveDetectionInterval = null;
+    let currentImage = null;
+    let stream = null;
 
-        // Start webcam
-document.getElementById('startWebcam').addEventListener('click', async () => {
-    try {
-        // Remove the 'const' declaration here since we're using the global stream variable
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: {
-                width: 640,
-                height: 480
-            } 
-        });
-        video.srcObject = stream;
-    } catch (err) {
-        console.error("Error accessing webcam:", err);
-    }
-});
-
-// Stop webcam
-document.getElementById('stopWebcam').addEventListener('click', () => {
-    if (stream) {
-        // Stop all tracks in the stream
-        stream.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-        stream = null;
-
-        // Clear the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Also stop live detection if it's running
-        if (liveDetectionInterval) {
-            clearInterval(liveDetectionInterval);
-            liveDetectionInterval = null;
+    // Start webcam with error handling
+    document.getElementById('startWebcam').addEventListener('click', async () => {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: 640,
+                    height: 480
+                }
+            });
+            video.srcObject = stream;
+            await video.play();
+        } catch (err) {
+            console.error("Error accessing webcam:", err);
+            alert("Failed to access webcam. Please ensure you have granted camera permissions.");
         }
+    });
 
-        // Reset canvas dimensions to default
-        canvas.width = 640;
-        canvas.height = 480;
-    }
-});
-
-        // Capture single frame
-        document.getElementById('captureFrame').addEventListener('click', () => {
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            // Store the current frame
-            currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            // Convert canvas to blob and send to server
-            canvas.toBlob(sendImageForPrediction, 'image/jpeg');
-        });
-
-        // Start live detection
-        document.getElementById('startLive').addEventListener('click', () => {
-            if (!liveDetectionInterval) {
-                liveDetectionInterval = setInterval(() => {
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    canvas.toBlob(sendImageForPrediction, 'image/jpeg');
-                }, 1000); // Process one frame per second - adjust as needed
-            }
-        });
-
-        // Stop live detection
-        document.getElementById('stopLive').addEventListener('click', () => {
+    // Stop webcam with proper cleanup
+    document.getElementById('stopWebcam').addEventListener('click', () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            stream = null;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             if (liveDetectionInterval) {
                 clearInterval(liveDetectionInterval);
                 liveDetectionInterval = null;
             }
-        });
-
-        // Modified drawDetections function
-        const drawDetections = (data) => {
-    // Clear canvas first
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw the stored image
-    if (currentImage) {
-        ctx.putImageData(currentImage, 0, 0);
-    }
-    
-    // Draw predictions
-    data.predictions.forEach(pred => {
-        const [x1, y1, x2, y2] = pred.bbox;
-        // Draw bounding box
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-        
-        // Draw confidence text
-        ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 3;
-        ctx.font = '14px Arial';
-        const text = `Confidence: ${(pred.confidence * 100).toFixed(1)}%`;
-        ctx.strokeText(text, x1, y1 - 5);
-        ctx.fillText(text, x1, y1 - 5);
-        
-        // Draw all keypoints
-        pred.keypoints.forEach((point, index) => {
-            const [x, y, conf] = point;
-            
-            // Draw point
-            ctx.beginPath();
-            ctx.arc(x, y, 4, 0, 2 * Math.PI);
-            // Color based on confidence
-            const alpha = Math.max(0.3, conf); // Minimum opacity of 0.3
-            ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
-            ctx.fill();
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // Draw point number
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
-            ctx.font = '12px Arial';
-            
-            // Point number
-            ctx.strokeText(index + 1, x + 6, y - 6);
-            ctx.fillText(index + 1, x + 6, y - 6);
-        });
-    });
-};
-
-        // Function to format predictions in a readable way
-        const formatPredictions = (data) => {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = '';
-    
-    data.predictions.forEach((pred, index) => {
-        const predDiv = document.createElement('div');
-        predDiv.style.marginBottom = '20px';
-        predDiv.innerHTML = `
-            <h4>Detection ${index + 1}</h4>
-            <div style="margin-left: 10px">
-                <p><strong>Confidence:</strong> ${(pred.confidence * 100).toFixed(1)}%</p>
-                <p><strong>Bounding Box:</strong></p>
-                <ul style="margin: 5px 0">
-                    <li>Top-left: (${pred.bbox[0].toFixed(1)}, ${pred.bbox[1].toFixed(1)})</li>
-                    <li>Bottom-right: (${pred.bbox[2].toFixed(1)}, ${pred.bbox[3].toFixed(1)})</li>
-                </ul>
-                <p><strong>Keypoints:</strong></p>
-                <div style="margin-left: 10px">
-                    ${pred.keypoints.map((point, i) => `
-                        <p>Point ${i + 1}: (${point[0].toFixed(1)}, ${point[1].toFixed(1)}) - 
-                           Confidence: ${(point[2] * 100).toFixed(1)}%</p>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-        resultDiv.appendChild(predDiv);
-    });
-};
-
-        // Modified sendImageForPrediction function with additional logging
-const sendImageForPrediction = async (imageBlob) => {
-    console.log("Sending image for prediction"); // Debug log
-    
-    try {
-        const formData = new FormData();
-        formData.append('file', imageBlob);
-
-        console.log("Sending request to server..."); // Debug log
-        const response = await fetch('http://localhost:8000/predict', {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
         }
+    });
 
-        const results = await response.json();
-        console.log("Received prediction results:", results); // Debug log
-        
-        // Format predictions in a readable way
-        formatPredictions(results);
-        
-        // Draw detections on the image
-        drawDetections(results);
-        
-    } catch (error) {
-        console.error("Error in sendImageForPrediction:", error);
-        document.getElementById('result').textContent = 'Error: ' + error.message;
-    }
-};
+    // Capture frame with error handling
+    document.getElementById('captureFrame').addEventListener('click', () => {
+        if (!stream) {
+            alert("Please start the webcam first.");
+            return;
+        }
+        try {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            canvas.toBlob(sendImageForPrediction, 'image/jpeg');
+        } catch (err) {
+            console.error("Error capturing frame:", err);
+            alert("Failed to capture frame.");
+        }
+    });
 
-// Modified File input handler with improved error handling and logging
-document.getElementById('imageInput').addEventListener('change', async (e) => {
-    console.log("Image upload triggered"); // Debug log
-    
-    // Stop webcam if it's running
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-        stream = null;
-        
+    // Start live detection with proper checks
+    document.getElementById('startLive').addEventListener('click', () => {
+        if (!stream) {
+            alert("Please start the webcam first.");
+            return;
+        }
+        if (!liveDetectionInterval) {
+            liveDetectionInterval = setInterval(() => {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                canvas.toBlob(sendImageForPrediction, 'image/jpeg');
+            }, 1000);
+        }
+    });
+
+    // Stop live detection
+    document.getElementById('stopLive').addEventListener('click', () => {
         if (liveDetectionInterval) {
             clearInterval(liveDetectionInterval);
             liveDetectionInterval = null;
         }
-    }
+    });
 
-    if (e.target.files.length > 0) {
-        const file = e.target.files[0];
-        console.log("Selected file:", file.name); // Debug log
+    // Draw detections with fixed template literals
+    const drawDetections = (data) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        const img = new Image();
+        if (currentImage) {
+            ctx.putImageData(currentImage, 0, 0);
+        }
         
-        img.onload = () => {
-            console.log("Image loaded, dimensions:", img.width, "x", img.height); // Debug log
+        data.predictions.forEach(pred => {
+            const [x1, y1, x2, y2] = pred.bbox;
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
             
-            // Set canvas dimensions
-            canvas.width = Math.min(img.width, 1920); // Limit maximum width
-            canvas.height = Math.min(img.height, 1080); // Limit maximum height
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 3;
+            ctx.font = '14px Arial';
+            const text = `Confidence: ${(pred.confidence * 100).toFixed(1)}%`;
+            ctx.strokeText(text, x1, y1 - 5);
+            ctx.fillText(text, x1, y1 - 5);
             
-            // Clear previous content
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw the image
-            try {
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            pred.keypoints.forEach((point, index) => {
+                const [x, y, conf] = point;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                const alpha = Math.max(0.3, conf);
+                ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.stroke();
                 
-                // Ensure blob creation and sending
-                canvas.toBlob((blob) => {
-                    if (blob) {
-                        console.log("Blob created, size:", blob.size); // Debug log
-                        sendImageForPrediction(blob);
-                    } else {
-                        console.error("Failed to create blob from canvas");
-                    }
-                }, 'image/jpeg', 0.95);
-                
-            } catch (error) {
-                console.error("Error drawing image to canvas:", error);
-            }
-        };
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.font = '12px Arial';
+                ctx.strokeText(index + 1, x + 6, y - 6);
+                ctx.fillText(index + 1, x + 6, y - 6);
+            });
+        });
+    };
 
-        img.onerror = (error) => {
-            console.error("Error loading image:", error);
-        };
+    const formatPredictions = (data) => {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+        
+        data.predictions.forEach((pred, index) => {
+            const predDiv = document.createElement('div');
+            predDiv.style.marginBottom = '20px';
+            predDiv.innerHTML = `
+                <h4>Detection ${index + 1}</h4>
+                <div style="margin-left: 10px">
+                    <p><strong>Confidence:</strong> ${(pred.confidence * 100).toFixed(1)}%</p>
+                    <p><strong>Bounding Box:</strong></p>
+                    <ul style="margin: 5px 0">
+                        <li>Top-left: (${pred.bbox[0].toFixed(1)}, ${pred.bbox[1].toFixed(1)})</li>
+                        <li>Bottom-right: (${pred.bbox[2].toFixed(1)}, ${pred.bbox[3].toFixed(1)})</li>
+                    </ul>
+                    <p><strong>Keypoints:</strong></p>
+                    <div style="margin-left: 10px">
+                        ${pred.keypoints.map((point, i) => `
+                            <p>Point ${i + 1}: (${point[0].toFixed(1)}, ${point[1].toFixed(1)}) - 
+                               Confidence: ${(point[2] * 100).toFixed(1)}%</p>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            resultDiv.appendChild(predDiv);
+        });
+    };
 
+    const sendImageForPrediction = async (imageBlob) => {
         try {
-            const imageUrl = URL.createObjectURL(file);
-            img.src = imageUrl;
-            // Clean up object URL after image loads
+            const formData = new FormData();
+            formData.append('file', imageBlob);
+
+            const response = await fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const results = await response.json();
+            formatPredictions(results);
+            drawDetections(results);
+            
+        } catch (error) {
+            console.error("Error in sendImageForPrediction:", error);
+            document.getElementById('result').textContent = 'Error: ' + error.message;
+        }
+    };
+
+    document.getElementById('imageInput').addEventListener('change', async (e) => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            stream = null;
+            
+            if (liveDetectionInterval) {
+                clearInterval(liveDetectionInterval);
+                liveDetectionInterval = null;
+            }
+        }
+
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const img = new Image();
+            
             img.onload = function() {
                 URL.revokeObjectURL(this.src);
-                // Draw and process image
                 canvas.width = Math.min(this.width, 1920);
                 canvas.height = Math.min(this.height, 1080);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -468,16 +427,24 @@ document.getElementById('imageInput').addEventListener('change', async (e) => {
                 
                 canvas.toBlob((blob) => {
                     if (blob) {
-                        console.log("Sending blob to model, size:", blob.size);
                         sendImageForPrediction(blob);
                     }
                 }, 'image/jpeg', 0.95);
             };
-        } catch (error) {
-            console.error("Error creating object URL:", error);
+
+            img.onerror = (error) => {
+                console.error("Error loading image:", error);
+                alert("Failed to load the selected image.");
+            };
+
+            try {
+                img.src = URL.createObjectURL(file);
+            } catch (error) {
+                console.error("Error creating object URL:", error);
+                alert("Failed to process the selected image.");
+            }
         }
-    }
-});
-    </script>
+    });
+</script>
 </body>
 </html>
