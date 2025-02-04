@@ -1,0 +1,55 @@
+{
+    "0": {
+        "name": "Orion",
+        "stars": [
+            {
+                "name": "Meissa",
+                "ra": "05h 35m 08.4s",
+                "dec": "+09° 56' 03.0\"",
+                "index": 0
+            },
+            {
+                "name": "Betelgeuse",
+                "ra": "05h 55m 10.3s",
+                "dec": "+07° 24' 25.4\"",
+                "index": 1
+            },
+            {
+                "name": "Bellatrix",
+                "ra": "05h 25m 07.9s",
+                "dec": "+06° 20' 59.0\"",
+                "index": 2
+            },
+            {
+                "name": "Alnitak",
+                "ra": "05h 40m 45.5s",
+                "dec": "-01° 56' 33.3\"",
+                "index": 3
+            },
+            {
+                "name": "Alnilam",
+                "ra": "05h 36m 12.8s",
+                "dec": "-01° 12' 06.9\"",
+                "index": 4
+            },
+            {
+                "name": "Mintaka",
+                "ra": "05h 32m 00.4s",
+                "dec": "-00° 17' 56.7\"",
+                "index": 5
+            },
+            {
+                "name": "Saiph",
+                "ra": "05h 47m 45.4s",
+                "dec": "-09° 40' 10.6\"",
+                "index": 6
+            },
+            {
+                "name": "Rigel",
+                "ra": "05h 14m 32.3s", 
+                "dec": "-08° 12' 05.9\"",
+                "index": 7
+            }
+        ]
+    }
+}
