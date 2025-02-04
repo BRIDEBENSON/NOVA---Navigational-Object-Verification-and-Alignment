@@ -182,9 +182,8 @@
         <section id="visibility-form">
             <label id="visibility-status-label"></label>
             <!-- Camera Feed Button (Initially Hidden) -->
-            <a id="camera-feed-btn" href="http://127.0.0.1:8000" style="display: none;">Camera Feed</a>
+            <a id="camera-feed-btn" href="http://127.0.0.1:8000" target="_blank" style="display: none;">Camera Feed</a>
         </section>
-        
     </main>
     <footer>
         <p>&copy; 2024 Nova</p>
@@ -214,7 +213,6 @@
         alert("Geolocation is not supported by your browser. Please enter your location manually.");
     }
 }
-
 function handleLocationError(error) {
     let errorMessage = "An error occurred while getting your location. "; // Start with a general message
 
@@ -386,10 +384,12 @@ function checkVisibility() {
     const longitude = parseFloat(document.getElementById('longitude').value);
     const dateTime = new Date();
     const cameraButton = document.getElementById('camera-feed-btn');
+    const visibilityLabel = document.getElementById('visibility-status-label');
 
     if (!ra || !dec || isNaN(latitude) || isNaN(longitude)) {
         alert("Please enter all fields correctly.");
         cameraButton.style.display = "none";
+        visibilityLabel.textContent = "";
         return;
     }
 
@@ -405,30 +405,16 @@ function checkVisibility() {
 
     const visibility = calculateVisibilityTimes(raDeg, decDeg, latitude, longitude, dateTime);
 
-    let message;
-    
     if (altNow > 0) {
-        message = `The celestial object is currently visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will set by ${visibility.setTime.toLocaleTimeString()}.`;
-        
+        visibilityLabel.textContent = "Visibility Status: Visible";
         cameraButton.style.display = "block";
-        document.getElementById('visibility-status').value = "visible";
     } else {
-        message = `The celestial object is currently not visible in your location.\nAltitude: ${altNow.toFixed(2)} degrees.\nAzimuth: ${azNow.toFixed(2)} degrees.\nIt will rise at ${visibility.riseTime.toLocaleTimeString()}.`;
-        
+        visibilityLabel.textContent = "Visibility Status: Not Visible";
         cameraButton.style.display = "none";
-        document.getElementById('visibility-status').value = "not-visible";
     }
-    
-    alert(message);
 }
-        document.getElementById('visibility-status').addEventListener('change', function() {
-            var cameraButton = document.getElementById('camera-feed-btn');
-            if (this.value === "visible") {
-                cameraButton.style.display = "block";
-            } else {
-                cameraButton.style.display = "none";
-            }
-        });
+
     </script>      
 </body>
 </html>
+
