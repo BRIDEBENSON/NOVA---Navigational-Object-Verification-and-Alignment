@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Constellation Detection</title>
     <style>
         .container {
@@ -38,19 +41,90 @@
         .predictions p {
             margin: 5px 0;
         }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        /* Style for webcam & image upload container */
+        .image-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            min-width: 400px;
+        }
+
+        /* Style for predictions box */
+        .predictions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 35%;
+            min-width: 300px;
+        }
+
+        /* Change predictions title color to violet */
+        .predictions h3 {
+            color: violet;
+        }
+
+        /* Make video and canvas uniform */
+        canvas, video {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-width: 100%;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .image-container, .predictions {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Constellation Detection</h1>
-    <div class="container">
-        <div class="control-panel">
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Nova Logo" class="logo">
+                <span class="logo-text">NOVA</span>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="telyaid.html">TelyAid</a></li>
+                <li><a href="svc.html">Star Visibility Checker</a></li>
+                <li><a href="almanac.html">Almanac</a></li>
+                <li><a href="team.html">Team</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h6 class="welcome">Constellation Dectection</h6>
+        <div class="container">
+            <!-- Webcam & Uploaded Image in White Box -->
             <div>
                 <h3>File Upload</h3>
                 <input type="file" id="imageInput" accept="image/*">
             </div>
-            
-            <div>
-                <h3>Webcam</h3>
+            <div class="image-container">
+                <h3>Webcam & Uploaded Image</h3>
                 <video id="video" width="640" height="480" autoplay></video>
                 <canvas id="preview" width="640" height="480"></canvas>
                 <div>
@@ -61,13 +135,18 @@
                     <button id="stopLive">Stop Live Detection</button>
                 </div>
             </div>
-        </div>
-        <div class="predictions">
-            <h3>Predictions:</h3>
-            <pre id="result"></pre>
-        </div>
-    </div>
 
+            <!-- Predictions Box -->
+            <div class="predictions">
+                <h3>Predictions:</h3>
+                <pre id="result"></pre>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Nova</p>
+        <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
+    </footer>
     <script>
         const video = document.getElementById('video');
 const canvas = document.getElementById('preview');
