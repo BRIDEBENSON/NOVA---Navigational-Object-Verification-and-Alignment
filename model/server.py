@@ -16,6 +16,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Global variable to store latest predictions and image info
+latest_data = {
+    "predictions": [],
+    "image_center": None
+}
+
 # Serve the localserver.html file at root
 @app.get("/")
 async def root():
@@ -26,10 +32,10 @@ async def root():
 async def sample():
     return FileResponse("sample.html")
 
-# New endpoint to get latest predictions
+# Updated endpoint to get latest predictions and image center
 @app.get("/get-predictions")
 async def get_predictions():
-    return latest_predictions
+    return latest_data
 
 # Load YOLO model
 MODEL_PATH = 'yolov8.pt'
@@ -48,6 +54,11 @@ async def predict(file: UploadFile):
         
         if model is None:
             raise HTTPException(status_code=500, detail="Model not loaded")
+        
+        # Get image dimensions and calculate center
+        height, width = img.shape[:2]
+        center_x = width // 2
+        center_y = height // 2
             
         results = model(img)
         predictions = []
@@ -71,11 +82,17 @@ async def predict(file: UploadFile):
             }
             predictions.append(pred)
             
-         # Store the latest predictions
-        global latest_predictions
-        latest_predictions = {"predictions": predictions}
+        # Update the latest data with both predictions and image center
+        global latest_data
+        latest_data = {
+            "predictions": predictions,
+            "image_center": {
+                "x": center_x,
+                "y": center_y
+            }
+        }
             
-        return latest_predictions
+        return latest_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
