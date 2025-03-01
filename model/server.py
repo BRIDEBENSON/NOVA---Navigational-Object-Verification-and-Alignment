@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+import json
 import uvicorn
 from ultralytics import YOLO
 import cv2
@@ -16,6 +17,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+print("Available endpoints:")
+for route in app.routes:
+    print(f"  {route.methods} {route.path}")
+    
 # Global variable to store latest predictions and image info
 latest_data = {
     "predictions": [],
@@ -96,5 +101,25 @@ async def predict(file: UploadFile):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/plate-solve")
+async def plate_solve():
+    return FileResponse("plate-solve.html", media_type="text/html")
+
+@app.get("/plate-solve-main.js")
+async def plate_solve_main():
+    return FileResponse("plate-solve-main.js", media_type="text/javascript")
+
+@app.get("/plate-solve.js")
+async def plate_solve_js():
+    return FileResponse("plate-solve.js", media_type="text/javascript")
+
+@app.get("/reference-stars")
+async def get_reference_stars():
+    try:
+        with open("reference_stars.json", "r") as f:
+            return JSONResponse(content=json.load(f))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Reference stars data not found")
+    
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -1,0 +1,58 @@
+{
+    "reference_stars": [
+      {
+        "id": 1,
+        "ra_hours":5,
+        "ra_minutes": 36,
+        "ra_seconds": 32.0,
+        "dec_degrees": 9,
+        "dec_minutes": 57,
+        "dec_seconds": 1.1
+      },
+      {
+        "id": 2,
+        "ra_hours": 5,
+        "ra_minutes": 56,
+        "ra_seconds": 32.7,
+        "dec_degrees": 7,
+        "dec_minutes": 24,
+        "dec_seconds": 39.0
+      },
+      {
+        "id": 3,
+        "ra_hours": 5,
+        "ra_minutes": 26,
+        "ra_seconds": 29.4,
+        "dec_degrees": 6,
+        "dec_minutes": 22,
+        "dec_seconds": 17.5
+      },
+      {
+        "id": 4,
+        "ra_hours": 5,
+        "ra_minutes": 42,
+        "ra_seconds": 2.3,
+        "dec_degrees": -1,
+        "dec_minutes": 55,
+        "dec_seconds": 51.0
+      },
+      {
+        "id": 5,
+        "ra_hours": 5,
+        "ra_minutes": 48,
+        "ra_seconds": 57.6,
+        "dec_degrees": -9,
+        "dec_minutes": 39,
+        "dec_seconds": 45.9
+      },
+      {
+        "id": 6,
+        "ra_hours": 5,
+        "ra_minutes": 15,
+        "ra_seconds": 45.3,
+        "dec_degrees": -8,
+        "dec_minutes": 10,
+        "dec_seconds": 28.6
+      }
+    ]
+  }

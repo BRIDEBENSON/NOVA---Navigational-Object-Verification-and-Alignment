@@ -352,6 +352,20 @@
         const resultDiv = document.getElementById('result');
         resultDiv.innerHTML = '';
         
+         // Add image center information
+    if (data.image_center) {
+        const centerDiv = document.createElement('div');
+        centerDiv.style.marginBottom = '20px';
+        centerDiv.innerHTML = `
+            <h4>Image Center</h4>
+            <div style="margin-left: 10px">
+                <p>X: ${data.image_center.x}</p>
+                <p>Y: ${data.image_center.y}</p>
+            </div>
+        `;
+        resultDiv.appendChild(centerDiv);
+    }
+    
         data.predictions.forEach((pred, index) => {
             const predDiv = document.createElement('div');
             predDiv.style.marginBottom = '20px';
