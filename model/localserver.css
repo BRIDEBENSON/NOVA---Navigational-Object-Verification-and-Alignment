@@ -1,0 +1,202 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #090333, #1a0554);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Stars background effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(3px 3px at 5% 10%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 15% 25%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 20% 40%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 25% 15%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 35% 50%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 40% 80%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 45% 30%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 55% 70%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 60% 20%, #fff, rgba(255, 255, 255, 0)),
+        radial-gradient(3px 3px at 65% 90%, #fff, rgba(255, 255, 255, 0));
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: twinkle 4s infinite;
+    z-index: -1;
+}
+
+/* Welcome text styling */
+.welcome {
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #e0e7ff, #4f46e5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(88, 111, 253, 0.3);
+}
+
+/* Container layout */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+/* Image container styling */
+.image-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    min-width: 400px;
+    backdrop-filter: blur(5px);
+}
+
+/* Predictions box styling */
+.predictions {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    width: 35%;
+    min-width: 300px;
+    backdrop-filter: blur(5px);
+    color: #fff;
+}
+
+/* Video and canvas styling */
+canvas,
+video {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin-top: 10px;
+    max-width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(45deg, #4f46e5, #818cf8);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 10px;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Headings */
+h3 {
+    color: #e0e7ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(88, 111, 253, 0.3);
+}
+
+/* Footer styling */
+footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+footer a {
+    color: #818cf8;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-container,
+    .predictions {
+        width: 90%;
+    }
+
+    .welcome {
+        font-size: 2rem;
+    }
+}
+
+/* Animation keyframes */
+@keyframes twinkle {
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5, 0 0 30px #4f46e5;
+    }
+
+    to {
+        text-shadow: 0 0 20px #818cf8, 0 0 30px #818cf8, 0 0 40px #818cf8;
+    }
+}
