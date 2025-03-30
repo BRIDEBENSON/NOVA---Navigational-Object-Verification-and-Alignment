@@ -4,12 +4,6 @@ let referenceStars = null;
 let lastPredictions = null;
 
 function log(message, type = 'info') {
-    const debugDiv = document.getElementById('debug');
-    const timestamp = new Date().toLocaleTimeString();
-    const msgDiv = document.createElement('div');
-    msgDiv.className = type;
-    msgDiv.textContent = `${timestamp}: ${message}`;
-    debugDiv.insertBefore(msgDiv, debugDiv.firstChild);
     console.log(`${type.toUpperCase()}: ${message}`);
 }
 
@@ -170,7 +164,7 @@ async function updatePredictions() {
             const solution = solvePlate(matchedStars, centerX, centerY);
             log('Plate solving completed successfully', 'success');
 
-            document.getElementById('results').innerHTML = `
+            document.getElementById('plate_solve_results').innerHTML = `
                 <h3>Image Center Position:</h3>
                 <p>RA: ${solution.ra.h}h ${solution.ra.m}m ${solution.ra.s.toFixed(3)}s</p>
                 <p>Dec: ${solution.dec.sign}${solution.dec.d}° ${solution.dec.m}' ${solution.dec.s.toFixed(3)}"</p>
@@ -186,7 +180,7 @@ async function updatePredictions() {
             });
         } catch (error) {
             log(`Plate solving error: ${error.message}`, 'error');
-            document.getElementById('results').innerHTML = `
+            document.getElementById('plate_solve_results').innerHTML = `
                 <p class="error">Error during plate solving: ${error.message}</p>
                 <p>Please check the debug log for more information.</p>
             `;

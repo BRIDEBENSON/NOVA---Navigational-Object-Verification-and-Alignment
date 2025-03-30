@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constellation Detection</title>
-    <link rel="stylesheet" href="localserver.css">
+    <link rel="stylesheet" href="static/localserver.css"></link>
 </head>
 
 <body>
@@ -33,12 +33,17 @@
                 <h3>Predictions:</h3>
                 <pre id="result"></pre>
             </div>
+            <div class="platesolveresult" id="plate_solve_results">
+                <h3>Calculation of RA, Dec of reticle:</h3>
+            </div>
+            <div id="debug" class="log"></div>
         </div>
     </main>
     <footer>
         <p>&copy; 2024 Nova</p>
         <p>Enquire at <a href="mailto:nova.telescope.automation@gmail.com">nova.telescope.automation@gmail.com</a></p>
     </footer>
-    <script src="localserver.js" defer></script>
+    <script src="static/localserver.js" defer></script>
+    <script type = "module" src="plate-solve-main.js" defer></script>
 </body>
 </html>

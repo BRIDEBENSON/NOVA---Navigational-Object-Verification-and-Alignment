@@ -87,12 +87,12 @@ const drawDetections = (data) => {
     data.predictions.forEach(pred => {
         const [x1, y1, x2, y2] = pred.bbox;
         ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
 
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 1.5;
         ctx.font = '14px Arial';
         const text = `Confidence: ${(pred.confidence * 100).toFixed(1)}%`;
         ctx.strokeText(text, x1, y1 - 5);
@@ -111,7 +111,7 @@ const drawDetections = (data) => {
 
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5;
             ctx.font = '12px Arial';
             ctx.strokeText(index + 1, x + 6, y - 6);
             ctx.fillText(index + 1, x + 6, y - 6);

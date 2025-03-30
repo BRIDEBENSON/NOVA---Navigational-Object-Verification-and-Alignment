@@ -1,6 +1,8 @@
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+
 import json
 import uvicorn
 from ultralytics import YOLO
@@ -120,6 +122,17 @@ async def get_reference_stars():
             return JSONResponse(content=json.load(f))
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Reference stars data not found")
+    
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/localserver.css")
+async def get_localserver_css():
+    return FileResponse("static/localserver.css", media_type="text/css")
+
+@app.get("/localserver.js")
+async def get_localserver_js():
+    return FileResponse("static/localserver.js", media_type="text/javascript")
+
     
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
