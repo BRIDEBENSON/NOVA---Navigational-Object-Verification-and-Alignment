@@ -95,6 +95,38 @@ body::before {
     color: #fff;
     display: inline;
     line-height: 1.5;
+    font-family: 'Poppins', Arial, sans-serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.predictions {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    width: 35%;
+    min-width: 300px;
+    backdrop-filter: blur(5px);
+    color: #fff;
+    font-family: 'Poppins', Arial, sans-serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Ensure preformatted text does not exceed the container */
+#result {
+    white-space: pre-wrap; /* Allows wrapping of text */
+    word-wrap: break-word; /* Ensures long words break properly */
+    max-width: 100%; /* Prevents overflow */
+    overflow: hidden;
+    font-family: 'Poppins', Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
 }
 
 /* Video and canvas styling */
