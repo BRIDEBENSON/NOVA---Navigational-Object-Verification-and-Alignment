@@ -6,6 +6,418 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constellation Detection</title>
     <link rel="stylesheet" href="static/localserver.css"></link>
+    <script src="offset_calc.js"></script>
+    <!-- <script>
+        // Function to extract the current RA/Dec from the plate solve results
+        function extractCurrentCoordinates() {
+            const resultsElement = document.getElementById('plate_solve_results');
+            if (!resultsElement) return null;
+            
+            const content = resultsElement.innerHTML;
+            
+            // Extract RA values using regex
+            const raMatch = content.match(/RA: (\d+)h (\d+)m ([\d.]+)s/);
+            if (!raMatch) return null;
+            
+            // Extract Dec values using regex
+            const decMatch = content.match(/Dec: ([+-])(\d+)° (\d+)' ([\d.]+)"/);
+            if (!decMatch) return null;
+            
+            return {
+                ra_h: parseInt(raMatch[1], 10),
+                ra_m: parseInt(raMatch[2], 10),
+                ra_s: parseFloat(raMatch[3]),
+                dec_sign: decMatch[1],
+                dec_d: parseInt(decMatch[2], 10) * (decMatch[1] === '-' ? -1 : 1),
+                dec_m: parseInt(decMatch[3], 10),
+                dec_s: parseFloat(decMatch[4])
+            };
+        }
+
+        // Function to parse URL parameters for target coordinates
+        function getTargetCoordinatesFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetRA = decodeURIComponent(urlParams.get('ra')); // "06:45:09"
+            const targetDec = decodeURIComponent(urlParams.get('dec')); // "-16:42:58"
+            
+            if (!targetRA || !targetDec) return null;
+            
+            // Parse RA
+            const ra_parts = targetRA.split(':');
+            if (ra_parts.length !== 3) return null;
+            
+            // Parse Dec
+            const dec_parts = targetDec.split(':');
+            if (dec_parts.length !== 3) return null;
+            
+            // Get sign from Dec
+            const dec_sign = dec_parts[0].startsWith('-') ? '-' : '+';
+            const dec_d_abs = parseInt(dec_parts[0].replace('-', ''), 10);
+            
+            return {
+                ra_h: parseInt(ra_parts[0], 10),
+                ra_m: parseInt(ra_parts[1], 10),
+                ra_s: parseFloat(ra_parts[2]),
+                dec_sign: dec_sign,
+                dec_d: dec_sign === '-' ? -dec_d_abs : dec_d_abs,
+                dec_m: parseInt(dec_parts[1], 10),
+                dec_s: parseFloat(dec_parts[2])
+            };
+        }
+
+        // Function to calculate and display offsets
+        function updateOffsetCalculation() {
+            const current = extractCurrentCoordinates();
+            const target = getTargetCoordinatesFromURL();
+            
+            if (!current || !target) {
+                console.log("Missing current or target coordinates");
+                return;
+            }
+            
+            console.log("Current coordinates:", current);
+            console.log("Target coordinates:", target);
+            
+            // Calculate the offset using the imported function
+            const offset = calculateOffset(
+                current.ra_h, current.ra_m, current.ra_s,
+                current.dec_d, current.dec_m, current.dec_s,
+                target.ra_h, target.ra_m, target.ra_s,
+                target.dec_d, target.dec_m, target.dec_s
+            );
+            
+            // Display the results
+            const resultsDiv = document.getElementById('offset-results');
+            if (resultsDiv) {
+                resultsDiv.innerHTML = `
+                    <div class="coordinates">
+                        <h3>Current Position:</h3>
+                        <p>RA: ${current.ra_h}h ${current.ra_m}m ${current.ra_s.toFixed(2)}s</p>
+                        <p>Dec: ${current.dec_sign}${Math.abs(current.dec_d)}° ${current.dec_m}' ${current.dec_s.toFixed(2)}"</p>
+                    </div>
+                    
+                    <div class="coordinates">
+                        <h3>Target Position:</h3>
+                        <p>RA: ${target.ra_h}h ${target.ra_m}m ${target.ra_s.toFixed(2)}s</p>
+                        <p>Dec: ${target.dec_sign}${Math.abs(target.dec_d)}° ${target.dec_m}' ${target.dec_s.toFixed(2)}"</p>
+                    </div>
+                    
+                    <h3>Required Adjustment:</h3>
+                    <p><span class="offset-value">RA Offset: ${offset.ra_offset.toFixed(4)}°</span> 
+                       <span class="offset-info">(${(offset.ra_offset_time*60).toFixed(1)} minutes of time)</span></p>
+                    <p><span class="offset-value">Dec Offset: ${offset.dec_offset.toFixed(4)}°</span> 
+                       <span class="offset-info">(${offset.dec_offset_arcmin.toFixed(1)} arcminutes)</span></p>
+                    <p><span class="offset-value">Angular Separation: ${offset.angular_separation.toFixed(4)}°</span></p>
+                `;
+            }
+        }
+
+        // Set up observers to detect when plate solve results are updated
+        function setupOffsetCalculation() {
+            // Set up a MutationObserver to watch for changes to the plate_solve_results element
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        updateOffsetCalculation();
+                    }
+                });
+            });
+            
+            // Start observing the plate_solve_results element
+            const targetNode = document.getElementById('plate_solve_results');
+            if (targetNode) {
+                observer.observe(targetNode, { childList: true, subtree: true });
+                console.log("Observer set up for plate_solve_results");
+            } else {
+                console.log("plate_solve_results element not found, retrying in 1s");
+                setTimeout(setupOffsetCalculation, 1000);
+            }
+            
+            // Also try to calculate immediately in case results are already available
+            updateOffsetCalculation();
+        }
+
+        // Initialize when the document is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Document loaded, setting up offset calculation");
+            setupOffsetCalculation();
+            
+            // Set up event handler for the URL parameters button
+            document.getElementById('checkButton').addEventListener('click', function() {
+                // Get RA and Dec values
+                let ra = document.getElementById('ra').value.trim();
+                let dec = document.getElementById('dec').value.trim();
+                
+                // Check if both fields are filled
+                if (ra && dec) {
+                    // Construct the URL with query parameters
+                    let cameraFeedUrl = `${window.location.origin}${window.location.pathname}?ra=${encodeURIComponent(ra)}&dec=${encodeURIComponent(dec)}`;
+                    
+                    // Update URL without reloading the page
+                    window.history.pushState({}, '', cameraFeedUrl);
+                    
+                    // Update Camera Feed button href
+                    let cameraFeedBtn = document.getElementById('camera-feed-btn');
+                    cameraFeedBtn.href = cameraFeedUrl;
+                    cameraFeedBtn.style.display = 'inline';
+                    
+                    // Try to calculate offset with new parameters
+                    updateOffsetCalculation();
+                } else {
+                    alert("Please enter both Right Ascension (RA) and Declination (Dec).");
+                }
+            });
+        });
+
+        // Add this to your localserver.js file to integrate the offset calculation properly
+
+// Include the calculateOffset function directly to avoid loading issues
+function calculateOffset(
+    current_ra_h, current_ra_m, current_ra_s, 
+    current_dec_d, current_dec_m, current_dec_s,
+    target_ra_h, target_ra_m, target_ra_s, 
+    target_dec_d, target_dec_m, target_dec_s
+) {
+    // Convert everything to decimal degrees
+    const current_ra = (current_ra_h + current_ra_m/60 + current_ra_s/3600) * 15;
+    const current_dec = current_dec_d + current_dec_m/60 + current_dec_s/3600;
+    const target_ra = (target_ra_h + target_ra_m/60 + target_ra_s/3600) * 15;
+    const target_dec = target_dec_d + target_dec_m/60 + target_dec_s/3600;
+
+    // Calculate RA difference, handling wraparound at 360 degrees
+    let ra_diff = target_ra - current_ra;
+    if (ra_diff > 180) {
+        ra_diff -= 360;
+    } else if (ra_diff < -180) {
+        ra_diff += 360;
+    }
+
+    // Scale RA difference by cos(dec) to account for spherical distortion
+    // Use the average declination for the scaling
+    const avg_dec = ((current_dec + target_dec) / 2) * Math.PI / 180; // Convert to radians
+    const ra_offset = ra_diff * Math.cos(avg_dec);
+
+    // Calculate Dec difference
+    const dec_offset = target_dec - current_dec;
+
+    // Calculate true angular separation
+    const current_dec_rad = current_dec * Math.PI / 180;
+    const target_dec_rad = target_dec * Math.PI / 180;
+    const ra_diff_rad = ra_diff * Math.PI / 180;
+    
+    const angular_sep = Math.acos(
+        Math.sin(current_dec_rad) * Math.sin(target_dec_rad) +
+        Math.cos(current_dec_rad) * Math.cos(target_dec_rad) *
+        Math.cos(ra_diff_rad)
+    ) * 180 / Math.PI;
+
+    return {
+        ra_offset: ra_offset,  // degrees, negative means move west
+        dec_offset: dec_offset,  // degrees, negative means move south
+        angular_separation: angular_sep,  // degrees
+        ra_offset_time: ra_diff/15,  // hours
+        dec_offset_arcmin: dec_offset * 60  // arcminutes
+    };
+}
+
+// 1. Function to extract the current RA/Dec from the plate solve results
+function extractCurrentCoordinates() {
+    const resultsElement = document.getElementById('plate_solve_results');
+    if (!resultsElement) {
+        console.log("plate_solve_results element not found");
+        return null;
+    }
+    
+    const content = resultsElement.innerHTML;
+    console.log("Plate solve results content:", content);
+    
+    // Extract RA values using regex
+    const raMatch = content.match(/RA: (\d+)h (\d+)m ([\d.]+)s/);
+    if (!raMatch) {
+        console.log("Failed to match RA pattern");
+        return null;
+    }
+    
+    // Extract Dec values using regex
+    const decMatch = content.match(/Dec: ([+-])(\d+)° (\d+)' ([\d.]+)"/);
+    if (!decMatch) {
+        console.log("Failed to match Dec pattern");
+        return null;
+    }
+    
+    const result = {
+        ra_h: parseInt(raMatch[1], 10),
+        ra_m: parseInt(raMatch[2], 10),
+        ra_s: parseFloat(raMatch[3]),
+        dec_sign: decMatch[1],
+        dec_d: parseInt(decMatch[2], 10) * (decMatch[1] === '-' ? -1 : 1),
+        dec_m: parseInt(decMatch[3], 10),
+        dec_s: parseFloat(decMatch[4])
+    };
+    
+    console.log("Extracted current coordinates:", result);
+    return result;
+}
+
+// 2. Function to parse URL parameters for target coordinates
+function getTargetCoordinatesFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetRA = urlParams.get('ra');
+    const targetDec = urlParams.get('dec');
+    
+    if (!targetRA || !targetDec) {
+        console.log("Target coordinates not found in URL parameters");
+        return null;
+    }
+    
+    console.log("Raw target RA from URL:", targetRA);
+    console.log("Raw target Dec from URL:", targetDec);
+    
+    // Parse RA
+    const ra_parts = targetRA.split(':');
+    if (ra_parts.length !== 3) {
+        console.log("Invalid RA format");
+        return null;
+    }
+    
+    // Parse Dec
+    const dec_parts = targetDec.split(':');
+    if (dec_parts.length !== 3) {
+        console.log("Invalid Dec format");
+        return null;
+    }
+    
+    // Get sign from Dec
+    const dec_sign = dec_parts[0].startsWith('-') ? '-' : '+';
+    const dec_d_abs = parseInt(dec_parts[0].replace('-', ''), 10);
+    
+    const result = {
+        ra_h: parseInt(ra_parts[0], 10),
+        ra_m: parseInt(ra_parts[1], 10),
+        ra_s: parseFloat(ra_parts[2]),
+        dec_sign: dec_sign,
+        dec_d: dec_sign === '-' ? -dec_d_abs : dec_d_abs,
+        dec_m: parseInt(dec_parts[1], 10),
+        dec_s: parseFloat(dec_parts[2])
+    };
+    
+    console.log("Parsed target coordinates:", result);
+    return result;
+}
+
+// 3. Function to calculate and display offsets
+function updateOffsetCalculation() {
+    console.log("Running updateOffsetCalculation");
+    
+    const current = extractCurrentCoordinates();
+    const target = getTargetCoordinatesFromURL();
+    
+    if (!current || !target) {
+        console.log("Missing current or target coordinates");
+        return;
+    }
+    
+    // Calculate the offset
+    const offset = calculateOffset(
+        current.ra_h, current.ra_m, current.ra_s,
+        current.dec_d, current.dec_m, current.dec_s,
+        target.ra_h, target.ra_m, target.ra_s,
+        target.dec_d, target.dec_m, target.dec_s
+    );
+    
+    console.log("Calculated offset:", offset);
+    
+    // Create or get the results div
+    let resultsDiv = document.getElementById('offset-results');
+    if (!resultsDiv) {
+        resultsDiv = document.createElement('div');
+        resultsDiv.id = 'offset-results';
+        resultsDiv.style.backgroundColor = '#f0f0f0';
+        resultsDiv.style.padding = '10px';
+        resultsDiv.style.margin = '10px 0';
+        resultsDiv.style.border = '1px solid #ddd';
+        resultsDiv.style.borderRadius = '5px';
+        
+        // Find a good place to append it
+        const container = document.querySelector('.container') || document.body;
+        container.appendChild(resultsDiv);
+    }
+    
+    // Display the results
+    resultsDiv.innerHTML = `
+        <h3>Telescope Pointing Offset</h3>
+        <p><strong>RA Offset:</strong> ${offset.ra_offset.toFixed(4)}° (${(offset.ra_offset_time*60).toFixed(1)} minutes of time)</p>
+        <p><strong>Dec Offset:</strong> ${offset.dec_offset.toFixed(4)}° (${offset.dec_offset_arcmin.toFixed(1)} arcminutes)</p>
+        <p><strong>Angular Separation:</strong> ${offset.angular_separation.toFixed(4)}°</p>
+        <p><small>Current: RA ${current.ra_h}h ${current.ra_m}m ${current.ra_s.toFixed(1)}s, Dec ${current.dec_sign}${Math.abs(current.dec_d)}° ${current.dec_m}' ${current.dec_s.toFixed(1)}"</small></p>
+        <p><small>Target: RA ${target.ra_h}h ${target.ra_m}m ${target.ra_s.toFixed(1)}s, Dec ${target.dec_sign}${Math.abs(target.dec_d)}° ${target.dec_m}' ${target.dec_s.toFixed(1)}"</small></p>
+    `;
+}
+
+// 4. Set up methods to trigger the calculation
+function setupOffsetCalculation() {
+    console.log("Setting up offset calculation");
+    
+    // Create a manual calculation button if it doesn't exist
+    let calcButton = document.getElementById('calculate-offset-btn');
+    if (!calcButton) {
+        calcButton = document.createElement('button');
+        calcButton.id = 'calculate-offset-btn';
+        calcButton.textContent = 'Calculate Telescope Offset';
+        calcButton.style.margin = '10px 0';
+        calcButton.style.padding = '8px 16px';
+        calcButton.style.backgroundColor = '#4CAF50';
+        calcButton.style.color = 'white';
+        calcButton.style.border = 'none';
+        calcButton.style.borderRadius = '4px';
+        calcButton.style.cursor = 'pointer';
+        
+        // Find a good place to append it
+        const container = document.querySelector('.container') || document.body;
+        container.appendChild(calcButton);
+        
+        // Add click event
+        calcButton.addEventListener('click', updateOffsetCalculation);
+    }
+    
+    // Try to set up a MutationObserver to watch for changes to the plate_solve_results element
+    const targetNode = document.getElementById('plate_solve_results');
+    if (targetNode) {
+        console.log("Found plate_solve_results element, setting up observer");
+        const observer = new MutationObserver(function(mutations) {
+            console.log("Detected mutation in plate_solve_results");
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    updateOffsetCalculation();
+                }
+            });
+        });
+        
+        observer.observe(targetNode, { 
+            childList: true, 
+            subtree: true,
+            characterData: true 
+        });
+    } else {
+        console.log("plate_solve_results element not found, will use manual button only");
+    }
+    
+    // Also try to calculate immediately in case results are already available
+    setTimeout(updateOffsetCalculation, 1000);
+}
+
+// Initialize when the document is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Document loaded, setting up offset calculation");
+    setupOffsetCalculation();
+});
+
+// Also try to set up after window is fully loaded (backup)
+window.addEventListener('load', function() {
+    console.log("Window loaded, ensuring offset calculation is set up");
+    setupOffsetCalculation();
+});
+    </script> -->
 </head>
 
 <body>
@@ -37,6 +449,12 @@
                 <h3>Calculation of RA, Dec of reticle:</h3>
             </div>
             <div id="debug" class="log"></div>
+            <div class="panelresults" id="offset-results-container">
+                <h2>Pointing Offset Results</h2>
+                <div id="offset-results">
+                    <p>Set target coordinates and wait for plate solving to calculate offset.</p>
+                </div>
+            </div>
         </div>
     </main>
     <footer>

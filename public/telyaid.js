@@ -222,3 +222,22 @@ function checkVisibility() {
         cameraButton.style.display = "none";
     }
 }
+
+document.getElementById("checkButton").addEventListener("click", function () {
+    // Get RA and Dec values
+    let ra = document.getElementById("ra").value.trim();
+    let dec = document.getElementById("dec").value.trim();
+
+    // Check if both fields are filled
+    if (ra && dec) {
+        // Construct the URL with query parameters
+        let cameraFeedUrl = `http://127.0.0.1:8000?ra=${encodeURIComponent(ra)}&dec=${encodeURIComponent(dec)}`;
+
+        // Update Camera Feed button href
+        let cameraFeedBtn = document.getElementById("camera-feed-btn");
+        cameraFeedBtn.href = cameraFeedUrl;
+        cameraFeedBtn.style.display = "inline"; // Make it visible
+    } else {
+        alert("Please enter both Right Ascension (RA) and Declination (Dec).");
+    }
+});
