@@ -573,3 +573,272 @@ window.addEventListener('load', function() {
     console.log("Window loaded, ensuring offset calculation is set up");
     setupOffsetCalculation();
 });
+
+// Add this function to your code to create a dedicated alignment button
+function addTelescopeAlignmentButton() {
+    // Create the button with a distinct style
+    const alignButton = document.createElement('button');
+    alignButton.id = 'telescope-alignment-btn';
+    alignButton.textContent = 'Start Telescope Alignment';
+    alignButton.style.margin = '10px 0';
+    alignButton.style.padding = '10px 20px';
+    alignButton.style.backgroundColor = '#ff5722'; // Orange color to distinguish it
+    alignButton.style.color = 'white';
+    alignButton.style.border = 'none';
+    alignButton.style.borderRadius = '4px';
+    alignButton.style.cursor = 'pointer';
+    alignButton.style.fontWeight = 'bold';
+    alignButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    
+    // Add the button to the page
+    const container = document.querySelector('.container') || document.body;
+    container.appendChild(alignButton);
+    
+    // Store the latest calculated offset values
+    let currentRAOffset = null;
+    let currentDECOffset = null;
+    
+    // Add click event to send the command to Arduino
+    alignButton.addEventListener('click', function() {
+        // Check if we have valid offsets
+        if (currentRAOffset === null || currentDECOffset === null) {
+            alert('Please calculate the offset first by starting a plate solve.');
+            return;
+        }
+        
+        // Confirm before sending
+        if (confirm(`Are you sure you want to move the telescope?\nRA Offset: ${currentRAOffset.toFixed(4)}°\nDEC Offset: ${currentDECOffset.toFixed(4)}°`)) {
+            // Make an API call to your server
+            fetch('/send-to-arduino', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    raOffset: currentRAOffset,
+                    decOffset: currentDECOffset
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Command sent to telescope: ${data.message}`);
+            })
+            .catch(error => {
+                console.error('Error sending to Arduino:', error);
+                alert('Failed to send command to telescope');
+            });
+        }
+    });
+    
+    // Function to update the stored offset values
+    function updateStoredOffsets(raOffset, decOffset) {
+        currentRAOffset = raOffset;
+        currentDECOffset = decOffset;
+        
+        // Update button text to show current values
+        alignButton.textContent = `Start Telescope Alignment (RA: ${raOffset.toFixed(2)}°, DEC: ${decOffset.toFixed(2)}°)`;
+    }
+    
+    // Return the update function so it can be called elsewhere
+    return updateStoredOffsets;
+}
+
+// Modify your updateOffsetCalculation function to use this
+function updateOffsetCalculation() {
+    console.log("Running updateOffsetCalculation");
+    
+    const current = extractCurrentCoordinates();
+    const target = getTargetCoordinatesFromURL();
+    
+    if (!current || !target) {
+        console.log("Missing current or target coordinates");
+        return;
+    }
+    
+    // Calculate the offset
+    const offset = calculateOffset(
+        current.ra_h, current.ra_m, current.ra_s,
+        current.dec_d, current.dec_m, current.dec_s,
+        target.ra_h, target.ra_m, target.ra_s,
+        target.dec_d, target.dec_m, target.dec_s
+    );
+    
+    console.log("Calculated offset:", offset);
+    
+    // Create or get the results div
+    let resultsDiv = document.getElementById('offset-results');
+    if (!resultsDiv) {
+        resultsDiv = document.createElement('div');
+        resultsDiv.id = 'offset-results';
+        resultsDiv.style.backgroundColor = '#f0f0f0';
+        resultsDiv.style.padding = '10px';
+        resultsDiv.style.margin = '10px 0';
+        resultsDiv.style.border = '1px solid #ddd';
+        resultsDiv.style.borderRadius = '5px';
+        
+        // Find a good place to append it
+        const container = document.querySelector('.container') || document.body;
+        container.appendChild(resultsDiv);
+    }
+    
+    // Display the results
+    resultsDiv.innerHTML = `
+        <h3>Telescope Pointing Offset</h3>
+        <p><strong>RA Offset:</strong> ${offset.ra_offset.toFixed(4)}° (${(offset.ra_offset_time*60).toFixed(1)} minutes of time)</p>
+        <p><strong>Dec Offset:</strong> ${offset.dec_offset.toFixed(4)}° (${offset.dec_offset_arcmin.toFixed(1)} arcminutes)</p>
+        <p><strong>Angular Separation:</strong> ${offset.angular_separation.toFixed(4)}°</p>
+        <p><small>Current: RA ${current.ra_h}h ${current.ra_m}m ${current.ra_s.toFixed(1)}s, Dec ${current.dec_sign}${Math.abs(current.dec_d)}° ${current.dec_m}' ${current.dec_s.toFixed(1)}"</small></p>
+        <p><small>Target: RA ${target.ra_h}h ${target.ra_m}m ${target.ra_s.toFixed(1)}s, Dec ${target.dec_sign}${Math.abs(target.dec_d)}° ${target.dec_m}' ${target.dec_s.toFixed(1)}"</small></p>
+    `;
+    
+    // Update the stored offsets for the alignment button
+    if (window.updateTelescopeAlignmentOffsets) {
+        window.updateTelescopeAlignmentOffsets(offset.ra_offset, offset.dec_offset);
+    }
+}
+
+// Set up the alignment button and save the update function globally
+function setupOffsetCalculation() {
+    console.log("Setting up offset calculation");
+    
+    // Create the alignment button and save the update function
+    window.updateTelescopeAlignmentOffsets = addTelescopeAlignmentButton();
+    
+    // Create a manual calculation button if it doesn't exist
+    let calcButton = document.getElementById('calculate-offset-btn');
+    if (!calcButton) {
+        calcButton = document.createElement('button');
+        calcButton.id = 'calculate-offset-btn';
+        calcButton.textContent = 'Calculate Telescope Offset';
+        calcButton.style.margin = '10px 0';
+        calcButton.style.padding = '8px 16px';
+        calcButton.style.backgroundColor = '#4CAF50';
+        calcButton.style.color = 'white';
+        calcButton.style.border = 'none';
+        calcButton.style.borderRadius = '4px';
+        calcButton.style.cursor = 'pointer';
+        
+        // Find a good place to append it
+        const container = document.querySelector('.container') || document.body;
+        container.appendChild(calcButton);
+        
+        // Add click event
+        calcButton.addEventListener('click', updateOffsetCalculation);
+    }
+    
+    // Rest of the function...
+}
+
+// Add this function to your code to create a dedicated alignment button
+function addTelescopeAlignmentButton() {
+    // Create the button with a distinct style
+    const alignButton = document.createElement('button');
+    alignButton.id = 'telescope-alignment-btn';
+    alignButton.textContent = 'Start Telescope Alignment';
+    alignButton.style.margin = '10px 0';
+    alignButton.style.padding = '10px 20px';
+    alignButton.style.backgroundColor = '#ff5722'; // Orange color to distinguish it
+    alignButton.style.color = 'white';
+    alignButton.style.border = 'none';
+    alignButton.style.borderRadius = '4px';
+    alignButton.style.cursor = 'pointer';
+    alignButton.style.fontWeight = 'bold';
+    alignButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    
+    // Add the button to the page
+    const container = document.querySelector('.container') || document.body;
+    container.appendChild(alignButton);
+    
+    // Store the latest calculated offset values
+    let currentRAOffset = null;
+    let currentDECOffset = null;
+    
+    // Add status indicator
+    const statusIndicator = document.createElement('span');
+    statusIndicator.id = 'telescope-status';
+    statusIndicator.style.marginLeft = '10px';
+    statusIndicator.style.padding = '5px';
+    statusIndicator.style.borderRadius = '3px';
+    statusIndicator.style.fontWeight = 'normal';
+    statusIndicator.style.display = 'none';
+    alignButton.after(statusIndicator);
+    
+    // Add click event to send the command to Arduino via FastAPI
+    alignButton.addEventListener('click', function() {
+        // Check if we have valid offsets
+        if (currentRAOffset === null || currentDECOffset === null) {
+            alert('Please calculate the offset first by starting a plate solve.');
+            return;
+        }
+        
+        // Confirm before sending
+        if (confirm(`Are you sure you want to move the telescope?\nRA Offset: ${currentRAOffset.toFixed(4)}°\nDEC Offset: ${currentDECOffset.toFixed(4)}°`)) {
+            // Show status as pending
+            statusIndicator.textContent = 'Sending command...';
+            statusIndicator.style.backgroundColor = '#FFC107'; // Yellow/amber for pending
+            statusIndicator.style.color = 'black';
+            statusIndicator.style.display = 'inline';
+            
+            // Make an API call to your FastAPI server
+            fetch('/send-to-arduino', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    raOffset: currentRAOffset,
+                    decOffset: currentDECOffset
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response from server:', data);
+                
+                // Update status indicator
+                if (data.success) {
+                    statusIndicator.textContent = 'Telescope moving';
+                    statusIndicator.style.backgroundColor = '#4CAF50'; // Green for success
+                    statusIndicator.style.color = 'white';
+                    
+                    // Clear status after 5 seconds
+                    setTimeout(() => {
+                        statusIndicator.style.display = 'none';
+                    }, 5000);
+                } else {
+                    statusIndicator.textContent = `Error: ${data.message}`;
+                    statusIndicator.style.backgroundColor = '#F44336'; // Red for error
+                    statusIndicator.style.color = 'white';
+                }
+                
+                alert(`Command sent to telescope: ${data.message}`);
+            })
+            .catch(error => {
+                console.error('Error sending to Arduino:', error);
+                
+                // Update status indicator for error
+                statusIndicator.textContent = 'Connection failed';
+                statusIndicator.style.backgroundColor = '#F44336'; // Red for error
+                statusIndicator.style.color = 'white';
+                
+                alert('Failed to send command to telescope: ' + error.message);
+            });
+        }
+    });
+    
+    // Function to update the stored offset values
+    function updateStoredOffsets(raOffset, decOffset) {
+        currentRAOffset = raOffset;
+        currentDECOffset = decOffset;
+        
+        // Update button text to show current values
+        alignButton.textContent = `Start Telescope Alignment (RA: ${raOffset.toFixed(2)}°, DEC: ${decOffset.toFixed(2)}°)`;
+    }
+    
+    // Return the update function so it can be called elsewhere
+    return updateStoredOffsets;
+}
