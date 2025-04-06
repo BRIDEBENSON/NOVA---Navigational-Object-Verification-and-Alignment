@@ -28,7 +28,7 @@ latest_data = {
 }
 
 # Arduino serial connection settings
-ARDUINO_PORT = '/dev/ttyACM0'  # Change this to match your system (COM3 on Windows)
+ARDUINO_PORT = 'COM4'  # Change this to match your system (COM3 on Windows)
 ARDUINO_BAUD_RATE = 9600
 arduino_serial = None
 
